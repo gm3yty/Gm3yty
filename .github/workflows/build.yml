@@ -21,7 +21,7 @@ jobs:
           mkdir -p www
           cp index.html www/
           npm init -y
-          npm i @capacitor/core @capacitor/cli @capacitor/android
+          npm i @capacitor/core@6.0.0 @capacitor/cli@6.0.0 @capacitor/android@6.0.0
           npx cap init "المنظومة المالية" com.finance.app --web-dir www
           npx cap add android
           npx cap sync android
@@ -30,8 +30,7 @@ jobs:
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew clean
-          ./gradlew assembleDebug --refresh-dependencies
+          ./gradlew assembleDebug
 
       - name: Upload Android APK
         uses: actions/upload-artifact@v4
