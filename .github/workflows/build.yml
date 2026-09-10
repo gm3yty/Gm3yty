@@ -1,4 +1,4 @@
-name: Build Android App
+name: Build Multiplatform App
 on: [push]
 
 jobs:
@@ -37,4 +37,45 @@ jobs:
         with:
           name: android-apk
           path: android/app/build/outputs/apk/debug/*.apk
+
+  build-ios:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Prepare iOS Project
+        run: |
+          mkdir -p www
+          cp index.html www/
+          npm init -y
+          npm i @capacitor/core@6.0.0 @capacitor/cli@6.0.0 @capacitor/ios@6.0.0
+          npx cap init "المنظومة المالية" com.finance.app --web-dir www
+          npx cap add ios
+          npx cap sync ios
+
+      - name: Install CocoaPods
+        run: |
+          cd ios/App
+          pod install
+
+      - name: Build iOS App
+        run: |
+          cd ios/App
+          xcodebuild -workspace App.xcworkspace \
+                     -scheme App \
+                     -configuration Release \
+                     -sdk iphoneos \
+                     CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO CODE_SIGNING_ALLOWED=NO
+
+      - name: Upload iOS Output
+        uses: actions/upload-artifact@v4
+        with:
+          name: ios-build
+          path: ios/App/build/
           
