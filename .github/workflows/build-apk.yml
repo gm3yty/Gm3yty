@@ -16,35 +16,36 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
 
       - name: Setup Java JDK
         uses: actions/setup-java@v4
         with:
-          distribution: 'zulu'
+          distribution: 'temurin'
           java-version: '17'
 
       - name: Prepare Web Assets
         run: |
           mkdir -p www
+          cp -r index.html www/ 2>/dev/null || true
           cp -r * www/ 2>/dev/null || true
-          rm -rf www/www www/node_modules www/.github
+          rm -rf www/www www/node_modules www/.github www/android
 
-      - name: Install Capacitor & Dependencies
+      - name: Install Latest Capacitor
         run: |
           npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
 
       - name: Add Android Platform & Sync
         run: |
           npx cap add android
           npx cap sync android
 
-      - name: Build Debug APK with Gradle
+      - name: Build Debug APK
         run: |
           cd android
           chmod +x gradlew
-          ./gradlew assembleDebug --stacktrace
+          ./gradlew assembleDebug --no-daemon
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
