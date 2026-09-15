@@ -1,0 +1,3270 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="theme-color" content="#070a11" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <title id="app-meta-title">الإدارة المالية الشاملة | جمعيتي & ديوان & تخطيط</title>
+  
+  <link id="app-dynamic-favicon" rel="shortcut icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>">
+  <link id="app-apple-touch-icon" rel="apple-touch-icon" href="">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      font-family: 'Cairo', sans-serif;
+      background-color: #060910;
+      color: #f1f5f9;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+    input, textarea, select { user-select: auto; }
+    ::-webkit-scrollbar { width: 6px; height: 6px; }
+    ::-webkit-scrollbar-track { background: #060910; }
+    ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 999px; }
+    ::-webkit-scrollbar-thumb:hover { background: #334155; }
+
+    .ambient-3d-backdrop {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      overflow: hidden;
+      filter: saturate(120%);
+      transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    .ambient-orb {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(100px);
+      opacity: 0.38;
+      mix-blend-mode: screen;
+      transition: all 0.7s ease;
+    }
+    .ambient-grid {
+      position: absolute;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      background-size: 40px 40px;
+      mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+      -webkit-mask-image: radial-gradient(circle at center, black 40%, transparent 85%);
+    }
+
+    .theme-jamiyati .ambient-orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #10b981 0%, rgba(16,185,129,0.08) 65%, transparent 75%);
+      top: -100px; right: -80px;
+    }
+    .theme-jamiyati .ambient-orb-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #059669 0%, rgba(5,150,105,0.08) 65%, transparent 75%);
+      bottom: -110px; left: -90px;
+    }
+    .theme-jamiyati .ambient-orb-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #14b8a6 0%, rgba(20,184,166,0.06) 65%, transparent 75%);
+      top: 35%; left: 30%; opacity: 0.2;
+    }
+
+    .theme-dewan .ambient-orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #0ea5e9 0%, rgba(14,165,233,0.08) 65%, transparent 75%);
+      top: -100px; right: -80px;
+    }
+    .theme-dewan .ambient-orb-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #0284c7 0%, rgba(2,132,199,0.08) 65%, transparent 75%);
+      bottom: -110px; left: -90px;
+    }
+    .theme-dewan .ambient-orb-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #38bdf8 0%, rgba(56,189,248,0.06) 65%, transparent 75%);
+      top: 35%; left: 30%; opacity: 0.2;
+    }
+
+    .theme-planning .ambient-orb-1 {
+      width: 520px; height: 520px;
+      background: radial-gradient(circle, #a855f7 0%, rgba(168,85,247,0.08) 65%, transparent 75%);
+      top: -100px; right: -80px;
+    }
+    .theme-planning .ambient-orb-2 {
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, #7e22ce 0%, rgba(126,34,206,0.08) 65%, transparent 75%);
+      bottom: -110px; left: -90px;
+    }
+    .theme-planning .ambient-orb-3 {
+      width: 400px; height: 400px;
+      background: radial-gradient(circle, #c084fc 0%, rgba(192,132,252,0.06) 65%, transparent 75%);
+      top: 35%; left: 30%; opacity: 0.2;
+    }
+
+    #main-header {
+      transition: background 0.4s ease, border-color 0.4s ease, box-shadow 0.4s ease;
+    }
+    .header-jamiyati {
+      background: linear-gradient(180deg, rgba(6, 25, 20, 0.88) 0%, rgba(8, 14, 22, 0.94) 100%) !important;
+      border-bottom-color: rgba(16, 185, 129, 0.25) !important;
+      box-shadow: 0 4px 20px -5px rgba(16, 185, 129, 0.15) !important;
+    }
+    .header-dewan {
+      background: linear-gradient(180deg, rgba(6, 20, 35, 0.88) 0%, rgba(8, 14, 22, 0.94) 100%) !important;
+      border-bottom-color: rgba(14, 165, 233, 0.25) !important;
+      box-shadow: 0 4px 20px -5px rgba(14, 165, 233, 0.15) !important;
+    }
+    .header-planning {
+      background: linear-gradient(180deg, rgba(25, 10, 38, 0.88) 0%, rgba(8, 14, 22, 0.94) 100%) !important;
+      border-bottom-color: rgba(168, 85, 247, 0.25) !important;
+      box-shadow: 0 4px 20px -5px rgba(168, 85, 247, 0.15) !important;
+    }
+
+    .box-3d {
+      background: linear-gradient(180deg, rgba(20, 29, 46, 0.85) 0%, rgba(13, 19, 32, 0.95) 100%);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 1.25rem;
+      box-shadow: 
+        0 12px 28px -6px rgba(0, 0, 0, 0.6),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.15),
+        inset 0 -2px 0 0 rgba(0, 0, 0, 0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .box-3d:hover {
+      transform: translateY(-2px);
+      box-shadow: 
+        0 18px 34px -8px rgba(0, 0, 0, 0.75),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.2);
+    }
+
+    .btn-3d {
+      box-shadow: 
+        0 4px 10px 0 rgba(0, 0, 0, 0.35),
+        inset 0 1px 1px 0 rgba(255, 255, 255, 0.3),
+        inset 0 -2px 0 0 rgba(0, 0, 0, 0.3);
+      transition: all 0.15s ease;
+    }
+    .btn-3d:active {
+      transform: translateY(2px);
+      box-shadow: 
+        0 1px 3px 0 rgba(0, 0, 0, 0.4),
+        inset 0 1px 2px 0 rgba(0, 0, 0, 0.3);
+    }
+
+    .sunken-3d {
+      background: #090d15;
+      border: 1px solid rgba(255, 255, 255, 0.07);
+      box-shadow: 
+        inset 0 2px 5px 0 rgba(0, 0, 0, 0.6),
+        0 1px 0 0 rgba(255, 255, 255, 0.04);
+      transition: all 0.2s ease;
+    }
+    .sunken-3d:focus {
+      border-color: #10b981;
+      box-shadow: 
+        inset 0 2px 5px 0 rgba(0, 0, 0, 0.6),
+        0 0 0 1px #10b981;
+      outline: none;
+    }
+
+    .cal-cell {
+      background: #0e1420;
+      border: 1px solid rgba(255, 255, 255, 0.05);
+      box-shadow: 
+        0 3px 6px -2px rgba(0, 0, 0, 0.5),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.07);
+      transition: all 0.15s ease;
+    }
+    .cal-cell:hover {
+      transform: translateY(-1px);
+      border-color: rgba(255, 255, 255, 0.15);
+    }
+
+    .today-cell-active {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.25) 0%, rgba(5, 150, 105, 0.15) 100%) !important;
+      border: 2px solid #10b981 !important;
+      box-shadow: 0 0 18px -2px rgba(16, 185, 129, 0.4) !important;
+    }
+    .today-cell-dewan {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.25) 0%, rgba(2, 132, 199, 0.15) 100%) !important;
+      border: 2px solid #0ea5e9 !important;
+      box-shadow: 0 0 18px -2px rgba(14, 165, 233, 0.4) !important;
+    }
+    .today-cell-planning {
+      background: linear-gradient(135deg, rgba(168, 85, 247, 0.25) 0%, rgba(126, 34, 206, 0.15) 100%) !important;
+      border: 2px solid #a855f7 !important;
+      box-shadow: 0 0 18px -2px rgba(168, 85, 247, 0.4) !important;
+    }
+  </style>
+</head>
+<body class="antialiased selection:bg-emerald-500 selection:text-white pb-14 sm:pb-8 relative">
+
+  <div id="ambient-container" class="ambient-3d-backdrop theme-jamiyati">
+    <div class="ambient-orb ambient-orb-1"></div>
+    <div class="ambient-orb ambient-orb-2"></div>
+    <div class="ambient-orb ambient-orb-3"></div>
+    <div class="ambient-grid"></div>
+  </div>
+
+  <!-- Modal النظام -->
+  <div id="sys-dialog-modal" class="fixed inset-0 z-[100] bg-black/85 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-sm p-6 text-center relative border border-slate-700/60 shadow-2xl">
+      <div id="sys-dialog-icon-wrap" class="w-12 h-12 rounded-2xl mx-auto mb-3.5 flex items-center justify-center btn-3d">
+        <i id="sys-dialog-icon" data-lucide="info" class="w-6 h-6"></i>
+      </div>
+      <h3 id="sys-dialog-title" class="text-base font-extrabold text-white mb-2">تنبيه النظام</h3>
+      <p id="sys-dialog-msg" class="text-xs text-slate-300 leading-relaxed mb-5"></p>
+      <div id="sys-dialog-actions" class="flex items-center justify-center gap-2"></div>
+    </div>
+  </div>
+
+  <!-- AUTH SCREEN -->
+  <div id="auth-screen" class="fixed inset-0 z-50 bg-[#070a11]/95 flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-md p-6 sm:p-8 relative">
+      <div class="text-center mb-6">
+        <div id="auth-logo-preview" class="w-16 h-16 mx-auto mb-3 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-black text-2xl overflow-hidden btn-3d">
+          <i id="auth-logo-icon" data-lucide="shield-check" class="w-8 h-8"></i>
+        </div>
+        <h1 id="auth-app-title" class="text-xl font-black text-white">الإدارة المالية</h1>
+      </div>
+
+      <div class="flex items-center sunken-3d p-1 rounded-2xl mb-5 text-xs font-bold">
+        <button type="button" id="tab-auth-login" onclick="toggleAuthMode('login')" class="flex-1 py-2 rounded-xl bg-emerald-500 text-white btn-3d">تسجيل الدخول</button>
+        <button type="button" id="tab-auth-register" onclick="toggleAuthMode('register')" class="flex-1 py-2 rounded-xl text-slate-400 hover:text-white transition">إنشاء حساب جديد</button>
+      </div>
+
+      <form id="form-login" onsubmit="handleAuthLogin(event)" class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1.5">اسم المستخدم *</label>
+          <input type="text" id="login-username" required class="w-full rounded-xl sunken-3d p-3 text-white focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1.5">كلمة المرور *</label>
+          <input type="password" id="login-password" required class="w-full rounded-xl sunken-3d p-3 text-white focus:outline-none" />
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full py-3 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold text-sm btn-3d">
+            دخول للنظام
+          </button>
+        </div>
+      </form>
+
+      <form id="form-register" onsubmit="handleAuthRegister(event)" class="space-y-3 text-xs hidden">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">الاسم الكامل *</label>
+          <input type="text" id="reg-fullname" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">اسم المستخدم *</label>
+          <input type="text" id="reg-username" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">كلمة المرور *</label>
+          <input type="password" id="reg-password" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">تأكيد كلمة المرور *</label>
+          <input type="password" id="reg-password-confirm" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div class="pt-2">
+          <button type="submit" class="w-full py-3 rounded-xl bg-teal-500 hover:bg-teal-600 text-white font-bold text-sm btn-3d">
+            إنشاء حساب
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- HEADER -->
+  <header id="main-header" class="sticky top-0 z-40 border-b border-slate-800/80 header-jamiyati backdrop-blur-md px-3 sm:px-6 py-3">
+    <div class="max-w-7xl mx-auto flex items-center justify-between flex-wrap gap-3 relative z-10">
+      
+      <div class="flex items-center gap-3">
+        <div id="app-logo-icon" class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-400 flex items-center justify-center text-white font-black text-xl flex-shrink-0 cursor-pointer btn-3d transition-all duration-300" onclick="openModal('branding-modal')" title="تخصيص الشعار">
+          <i id="logo-icon-svg" data-lucide="wallet-cards" class="w-5 h-5"></i>
+        </div>
+
+        <div>
+          <h2 id="brand-title" class="text-sm sm:text-base font-black text-white leading-tight">الإدارة المالية</h2>
+          <span id="user-badge" class="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-md border border-emerald-500/20 inline-block mt-0.5"></span>
+        </div>
+        
+        <div class="flex items-center sunken-3d p-1 rounded-2xl mr-2">
+          <button onclick="switchTab('jamiyati')" id="tab-btn-jamiyati" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm bg-emerald-500 text-white btn-3d">
+            <i data-lucide="wallet-cards" class="w-3.5 h-3.5"></i>
+            <span>جمعيتي</span>
+          </button>
+          <button onclick="switchTab('dewan')" id="tab-btn-dewan" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white transition-all">
+            <i data-lucide="scale" class="w-3.5 h-3.5"></i>
+            <span>ديوان</span>
+          </button>
+          <button onclick="switchTab('planning')" id="tab-btn-planning" class="flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white transition-all">
+            <i data-lucide="target" class="w-3.5 h-3.5"></i>
+            <span>تخطيط</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button onclick="openModal('branding-modal')" class="p-2.5 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/60 btn-3d" title="تخصيص الشعار والمظهر">
+          <i id="palette-icon" data-lucide="palette" class="w-4 h-4 text-emerald-400 transition-colors duration-300"></i>
+        </button>
+
+        <button id="admin-settings-btn" onclick="openModal('admin-modal')" class="hidden p-2.5 rounded-xl bg-purple-500/20 text-purple-300 border border-purple-500/40 hover:bg-purple-500/30 btn-3d" title="إدارة الحسابات">
+          <i data-lucide="shield-check" class="w-4 h-4 text-purple-400"></i>
+        </button>
+
+        <button onclick="handleNotificationClick()" class="relative p-2.5 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/60 btn-3d" title="التنبيهات">
+          <i data-lucide="bell" class="w-4 h-4"></i>
+          <span id="notif-dot" class="hidden absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+        </button>
+
+        <button onclick="openModal('backup-modal')" class="p-2.5 rounded-xl bg-slate-900/90 text-slate-300 hover:text-white border border-slate-700/60 btn-3d" title="تصدير واستيراد">
+          <i id="backup-icon" data-lucide="sheet" class="w-4 h-4 text-emerald-400 transition-colors duration-300"></i>
+        </button>
+
+        <div id="dynamic-cta-container">
+          <button onclick="openAddJam3eyaModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold btn-3d">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>جمعية جديدة</span>
+          </button>
+        </div>
+
+        <button onclick="logoutCurrentUser()" class="p-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/25 text-rose-400 border border-rose-500/30 btn-3d" title="تسجيل الخروج">
+          <i data-lucide="log-out" class="w-4 h-4"></i>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <div id="due-warning-banner" class="hidden border-b border-amber-500/30 bg-amber-500/10 px-4 py-2.5 transition-all relative z-20">
+    <div class="max-w-7xl mx-auto flex items-center justify-between text-xs text-amber-200">
+      <div class="flex items-center gap-2">
+        <i data-lucide="alert-triangle" class="w-4 h-4 text-amber-400"></i>
+        <span id="due-warning-text">أقساط أو التزامات تستحق السداد قريباً!</span>
+      </div>
+      <button onclick="document.getElementById('due-warning-banner').classList.add('hidden')" class="text-slate-400 hover:text-white p-1">
+        <i data-lucide="x" class="w-4 h-4"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- SECTION 1: JAMIYATI -->
+  <main id="page-jamiyati" class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6 relative z-10">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">الرصيد الحر المتاح (الكاش)</span>
+          <button onclick="openModal('cash-modal')" class="p-1 rounded-lg bg-slate-800 text-slate-400 hover:text-emerald-400 transition" title="تعديل الكاش">
+            <i data-lucide="edit-3" class="w-3.5 h-3.5"></i>
+          </button>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-cash" class="text-3xl font-black text-emerald-400 tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2 flex items-center gap-1.5">
+          <i data-lucide="coins" class="w-3.5 h-3.5 text-emerald-400"></i>
+          السيولة النقدية الجاهزة للاستخدام الآن
+        </p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">إجمالي قيمة كل الجمعيات</span>
+          <span class="p-1.5 rounded-lg bg-indigo-500/10 text-indigo-400"><i data-lucide="layers" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-total-wealth" class="text-3xl font-black text-white tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p id="kpi-roscas-count" class="text-[11px] text-slate-400 mt-2 flex items-center gap-1.5">
+          <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-indigo-400"></i>
+          0 جمعيات نشطة في الخطة
+        </p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">الالزام الدوري المقدر شهرياً</span>
+          <span class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400"><i data-lucide="calendar-clock" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-monthly-dues" class="text-3xl font-black text-amber-400 tracking-tight">0</span>
+          <span class="currency-symbol-month text-xs font-bold text-slate-400">ج.م/شهر</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2 flex items-center gap-1.5">
+          <i data-lucide="info" class="w-3.5 h-3.5 text-amber-400"></i>
+          مجموع التزامات الأقساط خلال 30 يوماً
+        </p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">إجمالي المدفوع ونسبة الإنجاز</span>
+          <span id="kpi-progress-pct" class="text-xs font-bold text-cyan-400">0%</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-paid-sum" class="text-3xl font-black text-white tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <div class="w-full sunken-3d rounded-full h-2 mt-3 overflow-hidden">
+          <div id="kpi-progress-bar" class="h-full bg-gradient-to-r from-emerald-500 to-cyan-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-5 space-y-4">
+        <div class="box-3d p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="p-2 rounded-xl bg-emerald-500/10 text-emerald-400"><i data-lucide="calendar" class="w-4 h-4"></i></span>
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-white">التقويم المالي</h2>
+                <p class="text-[10px] text-slate-400">مواعيد الأقساط والقبض</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1 sunken-3d p-1 rounded-xl">
+              <button onclick="stepMonth(-1)" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+              <span id="cal-month-name" class="px-2 text-xs font-bold text-slate-200 min-w-[95px] text-center">سبتمبر 2026</span>
+              <button onclick="stepMonth(1)" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <button onclick="jumpToToday()" class="text-[10px] px-2 py-1 rounded-lg bg-emerald-500/20 text-emerald-300 font-bold border border-emerald-500/30 btn-3d">اليوم</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-7 gap-1.5 text-center text-[11px] font-bold text-slate-400 mb-2">
+            <div>سبت</div><div>أحد</div><div>اثنين</div><div>ثلاثاء</div><div>أربعاء</div><div>خميس</div><div>جمعة</div>
+          </div>
+
+          <div id="calendar-cells" class="grid grid-cols-7 gap-1.5 min-h-[300px]"></div>
+        </div>
+
+        <div id="day-notes-card" class="box-3d p-5 hidden transition-all">
+          <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+              <h3 id="selected-day-title" class="text-xs sm:text-sm font-bold text-white">تفاصيل اليوم</h3>
+            </div>
+            <button onclick="closeDayCard()" class="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div id="selected-day-items" class="space-y-2 mb-3"></div>
+
+          <div class="space-y-2">
+            <label class="block text-[11px] font-semibold text-slate-300">ملاحظة خاصة بهذا اليوم:</label>
+            <textarea id="day-note-text" rows="2" class="w-full text-xs rounded-xl sunken-3d p-2.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-emerald-500 transition"></textarea>
+            <div class="flex justify-end gap-2">
+              <button onclick="saveDayNote()" class="px-4 py-1.5 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs font-bold transition flex items-center gap-1.5 btn-3d">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                حفظ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-4">
+        <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+          <i data-lucide="landmark" class="w-5 h-5 text-emerald-400"></i>
+          الجمعيات المالية النشطة
+        </h2>
+        <div id="roscas-list" class="space-y-4"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SECTION 2: DEWAN -->
+  <main id="page-dewan" class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6 hidden relative z-10">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">صافي الموقف المالي</span>
+          <span class="p-1.5 rounded-lg bg-sky-500/10 text-sky-400"><i data-lucide="landmark" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-net-balance" class="text-3xl font-black text-white tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2">الفارق بين مستحقاتك والتزاماتك</p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">أموال لك (مستحقات)</span>
+          <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400"><i data-lucide="arrow-down-left" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-receivable" class="text-3xl font-black text-emerald-400 tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p id="kpi-receivable-count" class="text-[11px] text-slate-400 mt-2">0 ديون لك قيد الانتظار</p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">أموال عليك (التزامات)</span>
+          <span class="p-1.5 rounded-lg bg-rose-500/10 text-rose-400"><i data-lucide="arrow-up-right" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-payable" class="text-3xl font-black text-rose-400 tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p id="kpi-payable-count" class="text-[11px] text-slate-400 mt-2">0 التزامات واجبة عليك</p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">نسبة التصفية والسداد</span>
+          <span id="kpi-settled-pct" class="text-xs font-bold text-cyan-400">0%</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-settled-sum" class="text-3xl font-black text-white tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <div class="w-full sunken-3d rounded-full h-2 mt-3 overflow-hidden">
+          <div id="kpi-settled-bar" class="h-full bg-gradient-to-r from-sky-500 to-emerald-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-5 space-y-4">
+        <div class="box-3d p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="p-2 rounded-xl bg-sky-500/10 text-sky-400"><i data-lucide="calendar" class="w-4 h-4"></i></span>
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-white">استحقاقات ديوان</h2>
+                <p class="text-[10px] text-slate-400">مواعيد السداد والمستحقات</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1 sunken-3d p-1 rounded-xl">
+              <button onclick="stepMonthDewan(-1)" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+              <span id="cal-month-name-dewan" class="px-2 text-xs font-bold text-slate-200 min-w-[95px] text-center">سبتمبر 2026</span>
+              <button onclick="stepMonthDewan(1)" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <button onclick="jumpToTodayDewan()" class="text-[10px] px-2 py-1 rounded-lg bg-sky-500/20 text-sky-300 font-bold border border-sky-500/30 btn-3d">اليوم</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-7 gap-1.5 text-center text-[11px] font-bold text-slate-400 mb-2">
+            <div>سبت</div><div>أحد</div><div>اثنين</div><div>ثلاثاء</div><div>أربعاء</div><div>خميس</div><div>جمعة</div>
+          </div>
+
+          <div id="calendar-cells-dewan" class="grid grid-cols-7 gap-1.5 min-h-[300px]"></div>
+        </div>
+
+        <div id="day-notes-card-dewan" class="box-3d p-5 hidden transition-all">
+          <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-sky-400"></span>
+              <h3 id="selected-day-title-dewan" class="text-xs sm:text-sm font-bold text-white">تفاصيل اليوم</h3>
+            </div>
+            <button onclick="closeDayCardDewan()" class="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div id="selected-day-items-dewan" class="space-y-2 mb-3"></div>
+
+          <div class="space-y-2">
+            <label class="block text-[11px] font-semibold text-slate-300">ملاحظة خاصة بهذا اليوم:</label>
+            <textarea id="day-note-text-dewan" rows="2" class="w-full text-xs rounded-xl sunken-3d p-2.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-sky-500 transition"></textarea>
+            <div class="flex justify-end gap-2">
+              <button onclick="saveDayNoteDewan()" class="px-4 py-1.5 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-xs font-bold transition flex items-center gap-1.5 btn-3d">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                حفظ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="book-marked" class="w-5 h-5 text-sky-400"></i>
+            دفتر الديون والالتزامات
+          </h2>
+          <div class="flex items-center sunken-3d p-1 rounded-xl text-xs">
+            <button onclick="setDewanFilter('all')" id="btn-filter-all" class="px-3 py-1 rounded-lg font-bold bg-sky-500 text-white btn-3d">الكل</button>
+            <button onclick="setDewanFilter('receivable')" id="btn-filter-rec" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">لي (مستحقات)</button>
+            <button onclick="setDewanFilter('payable')" id="btn-filter-pay" class="px-3 py-1 rounded-lg text-slate-400 hover:text-white transition">عليّ (التزامات)</button>
+          </div>
+        </div>
+
+        <div id="debts-list" class="space-y-4"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- SECTION 3: PLANNING -->
+  <main id="page-planning" class="flex-1 max-w-7xl w-full mx-auto p-3 sm:p-6 space-y-6 hidden relative z-10">
+    <section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">إجمالي الأهداف المالية</span>
+          <span class="p-1.5 rounded-lg bg-purple-500/10 text-purple-400"><i data-lucide="target" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-plan-target-sum" class="text-3xl font-black text-white tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p id="kpi-plan-count" class="text-[11px] text-slate-400 mt-2">0 أهداف أو ميزانيات مخطط لها</p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">المدخر والمجمع حتى الآن</span>
+          <span class="p-1.5 rounded-lg bg-emerald-500/10 text-emerald-400"><i data-lucide="piggy-bank" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-plan-saved-sum" class="text-3xl font-black text-emerald-400 tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2">مجموع المبالغ المحتجزة للأهداف</p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">المبلغ المتبقي للوصول</span>
+          <span class="p-1.5 rounded-lg bg-amber-500/10 text-amber-400"><i data-lucide="hourglass" class="w-4 h-4"></i></span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-plan-remaining-sum" class="text-3xl font-black text-amber-400 tracking-tight">0</span>
+          <span class="currency-symbol text-xs font-bold text-slate-400">ج.م</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-2">المطلوب توفيره لاكتمال الخطط</p>
+      </div>
+
+      <div class="box-3d p-5">
+        <div class="flex items-center justify-between mb-2">
+          <span class="text-xs font-bold text-slate-400">متوسط إنجاز الخطط</span>
+          <span id="kpi-plan-progress-pct" class="text-xs font-bold text-purple-400">0%</span>
+        </div>
+        <div class="flex items-baseline gap-2">
+          <span id="kpi-plan-completed-count" class="text-3xl font-black text-white tracking-tight">0</span>
+          <span class="text-xs font-bold text-slate-400">مكتمل</span>
+        </div>
+        <div class="w-full sunken-3d rounded-full h-2 mt-3 overflow-hidden">
+          <div id="kpi-plan-progress-bar" class="h-full bg-gradient-to-r from-purple-500 to-emerald-400 rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+    </section>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      <div class="lg:col-span-5 space-y-4">
+        <div class="box-3d p-5">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <span class="p-2 rounded-xl bg-purple-500/10 text-purple-400"><i data-lucide="calendar" class="w-4 h-4"></i></span>
+              <div>
+                <h2 class="text-sm sm:text-base font-bold text-white">تقويم المواعيد والخطط</h2>
+                <p class="text-[10px] text-slate-400">تواريخ الوصول للأهداف والميزانيات</p>
+              </div>
+            </div>
+
+            <div class="flex items-center gap-1 sunken-3d p-1 rounded-xl">
+              <button onclick="stepMonthPlanning(-1)" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"><i data-lucide="chevron-right" class="w-4 h-4"></i></button>
+              <span id="cal-month-name-planning" class="px-2 text-xs font-bold text-slate-200 min-w-[95px] text-center">سبتمبر 2026</span>
+              <button onclick="stepMonthPlanning(1)" class="p-1 rounded-lg hover:bg-slate-800 text-slate-400 hover:text-white transition"><i data-lucide="chevron-left" class="w-4 h-4"></i></button>
+              <button onclick="jumpToTodayPlanning()" class="text-[10px] px-2 py-1 rounded-lg bg-purple-500/20 text-purple-300 font-bold border border-purple-500/30 btn-3d">اليوم</button>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-7 gap-1.5 text-center text-[11px] font-bold text-slate-400 mb-2">
+            <div>سبت</div><div>أحد</div><div>اثنين</div><div>ثلاثاء</div><div>أربعاء</div><div>خميس</div><div>جمعة</div>
+          </div>
+
+          <div id="calendar-cells-planning" class="grid grid-cols-7 gap-1.5 min-h-[300px]"></div>
+        </div>
+
+        <div id="day-notes-card-planning" class="box-3d p-5 hidden transition-all">
+          <div class="flex items-center justify-between pb-2 mb-3 border-b border-slate-800">
+            <div class="flex items-center gap-2">
+              <span class="w-2 h-2 rounded-full bg-purple-400"></span>
+              <h3 id="selected-day-title-planning" class="text-xs sm:text-sm font-bold text-white">تفاصيل اليوم</h3>
+            </div>
+            <button onclick="closeDayCardPlanning()" class="p-1 text-slate-400 hover:text-white rounded-lg hover:bg-slate-800">
+              <i data-lucide="x" class="w-4 h-4"></i>
+            </button>
+          </div>
+
+          <div id="selected-day-items-planning" class="space-y-2 mb-3"></div>
+
+          <div class="space-y-2">
+            <label class="block text-[11px] font-semibold text-slate-300">ملاحظة تخطيطية لهذا اليوم:</label>
+            <textarea id="day-note-text-planning" rows="2" class="w-full text-xs rounded-xl sunken-3d p-2.5 text-slate-100 placeholder-slate-500 focus:outline-none focus:border-purple-500 transition"></textarea>
+            <div class="flex justify-end gap-2">
+              <button onclick="saveDayNotePlanning()" class="px-4 py-1.5 rounded-xl bg-purple-500 hover:bg-purple-600 text-white text-xs font-bold transition flex items-center gap-1.5 btn-3d">
+                <i data-lucide="check" class="w-3.5 h-3.5"></i>
+                حفظ
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="lg:col-span-7 space-y-4">
+        <div class="flex items-center justify-between flex-wrap gap-2">
+          <h2 class="text-base sm:text-lg font-bold text-white flex items-center gap-2">
+            <i data-lucide="compass" class="w-5 h-5 text-purple-400"></i>
+            خريطة الأهداف المالية والادخار
+          </h2>
+        </div>
+
+        <div id="plans-list" class="space-y-4"></div>
+      </div>
+    </div>
+  </main>
+
+  <!-- MODAL BRANDING -->
+  <div id="branding-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="box-3d w-full max-w-lg p-5 sm:p-6 my-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="palette" class="w-5 h-5 text-emerald-400"></i>
+          تخصيص المظهر والشعار
+        </h3>
+        <button onclick="closeModal('branding-modal')" class="p-1 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="space-y-4 text-xs">
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">اسم الموقع في الشريط العلوي:</label>
+          <input type="text" id="cfg-app-name" placeholder="الإدارة المالية" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">رمز العملة المعتمد:</label>
+          <input type="text" id="cfg-app-currency" placeholder="ج.م" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+
+        <div class="p-3.5 rounded-2xl sunken-3d space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-emerald-400 text-xs">شعار الواجهة الرئيسي:</span>
+            <button type="button" onclick="resetHeaderLogo()" class="text-[10px] text-slate-400 hover:text-rose-400">إلغاء الشعار</button>
+          </div>
+          <div class="flex items-center gap-3">
+            <div id="modal-logo-preview" class="w-12 h-12 rounded-xl bg-slate-950 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <i data-lucide="image" class="w-5 h-5 text-slate-500"></i>
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <label class="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/40 cursor-pointer font-bold transition btn-3d">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>رفع صورة من الجهاز</span>
+                <input type="file" id="header-logo-input" accept="image/*" onchange="handleHeaderLogoUpload(event)" class="hidden" />
+              </label>
+              <input type="url" id="cfg-header-logo-url" oninput="previewHeaderFromUrl(this.value)" placeholder="أو ضع رابط مباشر للصورة" class="w-full rounded-xl sunken-3d p-1.5 text-white text-[11px] focus:outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <div id="favicon-admin-section" class="hidden p-3.5 rounded-2xl sunken-3d space-y-2">
+          <div class="flex items-center justify-between">
+            <span class="font-bold text-sky-400 text-xs">أيقونة شريط الرابط (Favicon) - سحابي للجميع:</span>
+            <button type="button" onclick="resetFaviconIcon()" class="text-[10px] text-slate-400 hover:text-rose-400">استعادة الافتراضية</button>
+          </div>
+          <div class="flex items-center gap-3">
+            <div id="modal-favicon-preview" class="w-12 h-12 rounded-xl bg-slate-950 border border-slate-700 flex items-center justify-center overflow-hidden flex-shrink-0">
+              <i data-lucide="globe" class="w-5 h-5 text-slate-500"></i>
+            </div>
+            <div class="flex-1 space-y-1.5">
+              <label class="flex items-center justify-center gap-2 px-3 py-1.5 rounded-xl bg-sky-500/20 hover:bg-sky-500/30 text-sky-300 border border-sky-500/40 cursor-pointer font-bold transition btn-3d">
+                <i data-lucide="upload" class="w-3.5 h-3.5"></i>
+                <span>رفع أيقونة المتصفح (PNG/ICO)</span>
+                <input type="file" id="favicon-file-input" accept="image/*" onchange="handleFaviconUpload(event)" class="hidden" />
+              </label>
+              <input type="url" id="cfg-favicon-url" oninput="previewFaviconFromUrl(this.value)" placeholder="أو ضع رابط أيقونة مباشر (موصى به سحابياً)" class="w-full rounded-xl sunken-3d p-1.5 text-white text-[11px] focus:outline-none" />
+            </div>
+          </div>
+        </div>
+
+        <div class="pt-3 border-t border-slate-800 flex justify-end gap-2">
+          <button type="button" onclick="closeModal('branding-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="button" onclick="saveUserBranding()" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 font-bold text-white btn-3d">تأكيد وحفظ التغييرات</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADMIN -->
+  <div id="admin-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="box-3d w-full max-w-4xl p-5 sm:p-7 my-6 relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+        <h3 class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="users" class="w-5 h-5 text-purple-400"></i>
+          إدارة الحسابات
+        </h3>
+        <button onclick="closeModal('admin-modal')" class="p-1 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <div class="flex-1 overflow-y-auto space-y-6 pr-1 text-xs">
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+          <div class="p-3.5 rounded-2xl sunken-3d text-center">
+            <span class="text-slate-400 block text-[11px]">إجمالي الحسابات</span>
+            <span id="rep-total-users" class="text-xl font-black text-white">0</span>
+          </div>
+          <div class="p-3.5 rounded-2xl sunken-3d text-center">
+            <span class="text-slate-400 block text-[11px]">الحسابات النشطة</span>
+            <span id="rep-active-users" class="text-xl font-black text-emerald-400">0</span>
+          </div>
+          <div class="p-3.5 rounded-2xl sunken-3d text-center">
+            <span class="text-slate-400 block text-[11px]">الحسابات المعلقة</span>
+            <span id="rep-locked-users" class="text-xl font-black text-rose-400">0</span>
+          </div>
+          <div class="p-3.5 rounded-2xl sunken-3d text-center">
+            <span class="text-slate-400 block text-[11px]">إجمالي السجلات</span>
+            <span id="rep-total-records" class="text-xl font-black text-sky-400">0</span>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <div id="users-management-list" class="space-y-2"></div>
+        </div>
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeModal('admin-modal')" class="px-5 py-2 rounded-xl bg-slate-800 text-slate-300 font-bold btn-3d">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL ADD ROSCA (زر تغيير اللون 3D بجانب لون التمييز) -->
+  <div id="add-jam3eya-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="box-3d w-full max-w-lg p-5 sm:p-6 my-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+        <h3 id="modal-title-jam3eya" class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-emerald-400"></i>
+          تسجيل جمعية جديدة
+        </h3>
+        <button onclick="closeModal('add-jam3eya-modal')" class="p-1 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="rosca-form" onsubmit="handleSaveRosca(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="form-rosca-id" />
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">اسم الجمعية *</label>
+          <input type="text" id="form-name" placeholder="أدخل اسم الجمعية" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">القيمة الإجمالية المقبوضة *</label>
+            <input type="number" id="form-total" min="100" placeholder="المبلغ الكلي المقبوض" required oninput="autoCalculateInstallment()" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">دورية الدفع والسداد *</label>
+            <select id="form-freq" onchange="syncFreqLabels()" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none">
+              <option value="monthly">شهرية</option>
+              <option value="every_10_days">كل 10 أيام</option>
+              <option value="every_15_days">نصف شهرية (كل 15 يوم)</option>
+              <option value="weekly">أسبوعية</option>
+              <option value="daily">يومية</option>
+            </select>
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label id="lbl-cycles" class="block font-semibold text-slate-300 mb-1">إجمالي عدد الأقساط *</label>
+            <input type="number" id="form-cycles" min="2" max="120" placeholder="مثال: 10" required oninput="autoCalculateInstallment()" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">قيمة القسط الفردي *</label>
+            <input type="number" id="form-installment" min="1" placeholder="قيمة القسط" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ بداية أول قسط *</label>
+            <input type="date" id="form-start-date" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+          <div>
+            <label id="lbl-payout-cycle" class="block font-semibold text-slate-300 mb-1">دورك في القبض *</label>
+            <input type="number" id="form-payout-cycle" min="1" max="120" placeholder="مثال: 1" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">حالة الاستلام (القبض)</label>
+            <select id="form-payout-status" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none">
+              <option value="pending">في الانتظار</option>
+              <option value="collected">تم القبض والاستلام</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">الأقساط المسددة مسبقاً</label>
+            <input type="number" id="form-paid-cycles" min="0" placeholder="فارغ إذا لم تسدد شيئاً" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">لون التمييز بالتقويم</label>
+          <div class="flex items-center gap-3">
+            <input type="color" id="form-color" value="#10b981" class="w-10 h-9 rounded-xl cursor-pointer bg-transparent border-0 p-0" />
+            <button type="button" onclick="document.getElementById('form-color').click()" class="px-3 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs btn-3d">تغيير اللون</button>
+          </div>
+        </div>
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal('add-jam3eya-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold btn-3d">حفظ الجمعية</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL ADD DEBT (DEWAN) - (زر تغيير اللون 3D بجانب لون التمييز) -->
+  <div id="add-debt-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="box-3d w-full max-w-lg p-5 sm:p-6 my-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+        <h3 id="debt-modal-title" class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-sky-400"></i>
+          تسجيل معاملة في ديوان
+        </h3>
+        <button onclick="closeModal('add-debt-modal')" class="p-1 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="debt-form" onsubmit="handleSaveDebt(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="form-debt-id" />
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">نوع المعاملة *</label>
+            <select id="form-debt-type" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none">
+              <option value="receivable">أموال لك (مستحقات)</option>
+              <option value="payable">أموال عليك (التزامات)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">اسم الطرف الآخر *</label>
+            <input type="text" id="form-debt-person" placeholder="اسم الشخص أو الجهة" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">المبلغ الإجمالي *</label>
+            <input type="number" id="form-debt-amount" min="1" placeholder="إجمالي المبلغ" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">المسدد مسبقاً</label>
+            <input type="number" id="form-debt-paid" min="0" placeholder="فارغ إذا لم يسدد" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ النشوء *</label>
+            <input type="date" id="form-debt-start-date" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ الاستحقاق *</label>
+            <input type="date" id="form-debt-due-date" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">البيان / ملاحظات</label>
+          <input type="text" id="form-debt-notes" placeholder="ملاحظات تفصيلية (اختياري)" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">لون التمييز بالتقويم</label>
+          <div class="flex items-center gap-3">
+            <input type="color" id="form-debt-color" value="#0ea5e9" class="w-10 h-9 rounded-xl cursor-pointer bg-transparent border-0 p-0" />
+            <button type="button" onclick="document.getElementById('form-debt-color').click()" class="px-3 py-2 rounded-xl bg-sky-600 hover:bg-sky-500 text-white font-bold text-xs btn-3d">تغيير اللون</button>
+          </div>
+        </div>
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal('add-debt-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold btn-3d">حفظ المعاملة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL ADD PLAN (PLANNING) - (زر تغيير اللون 3D بجانب لون التمييز) -->
+  <div id="add-plan-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4 overflow-y-auto">
+    <div class="box-3d w-full max-w-lg p-5 sm:p-6 my-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-4 border-b border-slate-800">
+        <h3 id="plan-modal-title" class="text-base font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-5 h-5 text-purple-400"></i>
+          تسجيل هدف تخطيطي جديد
+        </h3>
+        <button onclick="closeModal('add-plan-modal')" class="p-1 text-slate-400 hover:text-white rounded-lg"><i data-lucide="x" class="w-5 h-5"></i></button>
+      </div>
+
+      <form id="plan-form" onsubmit="handleSavePlan(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="form-plan-id" />
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">اسم الهدف / المشروع التخطيطي *</label>
+          <input type="text" id="form-plan-title" placeholder="مثال: شراء سيارة، ميزانية صيانة، صندوق طوارئ" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">المبلغ المستهدف بالكامل *</label>
+            <input type="number" id="form-plan-target" min="1" placeholder="المبلغ المطلوب توفيره" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">المبلغ المحفوظ حالياً</label>
+            <input type="number" id="form-plan-saved" min="0" placeholder="المبلغ المتوفر حالياً (إن وجد)" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تصنيف الهدف</label>
+            <select id="form-plan-category" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none">
+              <option value="ادخار استثماري">ادخار استثماري</option>
+              <option value="شراء أصول">شراء أصول ومعدات</option>
+              <option value="صندوق طوارئ">صندوق طوارئ واحتياطي</option>
+              <option value="تطوير وتجهيز">تطوير وتجهيز</option>
+              <option value="أخرى">أخرى</option>
+            </select>
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ الإنجاز المستهدف *</label>
+            <input type="date" id="form-plan-target-date" required class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">ملاحظات وخطة التوفير</label>
+          <input type="text" id="form-plan-notes" placeholder="مثال: تخصيص 2000 ج.م شهرياً من الفائض" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">لون التمييز بالتقويم</label>
+          <div class="flex items-center gap-3">
+            <input type="color" id="form-plan-color" value="#a855f7" class="w-10 h-9 rounded-xl cursor-pointer bg-transparent border-0 p-0" />
+            <button type="button" onclick="document.getElementById('form-plan-color').click()" class="px-3 py-2 rounded-xl bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs btn-3d">تغيير اللون</button>
+          </div>
+        </div>
+        <div class="pt-3 flex justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal('add-plan-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold btn-3d">حفظ الهدف التخطيطي</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- باقی النوافذ المساعدة والسكريبت -->
+  <div id="plan-deposit-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-md p-5 sm:p-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="plus-circle" class="w-4 h-4 text-purple-400"></i>
+          إيداع دفعة في الهدف
+        </h3>
+        <button onclick="closeModal('plan-deposit-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <form id="plan-deposit-form" onsubmit="handleConfirmPlanDeposit(event)" class="space-y-3.5 text-xs">
+        <input type="hidden" id="deposit-plan-id" />
+        <div class="p-3.5 rounded-xl sunken-3d space-y-1">
+          <div class="flex justify-between"><span class="text-slate-400">الهدف:</span><span id="deposit-plan-title" class="font-bold text-white"></span></div>
+          <div class="flex justify-between"><span class="text-slate-400">المتبقي للوصول:</span><span id="deposit-plan-remaining" class="font-black text-purple-400 text-sm"></span></div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">المبلغ المودع الآن *</label>
+          <input type="number" id="deposit-amount" min="1" placeholder="أدخل مبلغ الإيداع" required class="w-full rounded-xl sunken-3d p-2.5 text-white font-bold focus:outline-none" />
+        </div>
+        <div class="flex items-center gap-2 p-2.5 rounded-xl sunken-3d">
+          <input type="checkbox" id="deposit-deduct-cash" class="w-4 h-4 rounded text-purple-500 bg-slate-800 border-slate-700 cursor-pointer" />
+          <label for="deposit-deduct-cash" class="text-[11px] text-slate-300 cursor-pointer">خصم القيمة من الكاش الحر المتاح</label>
+        </div>
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal('plan-deposit-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white font-bold btn-3d">تأكيد الإيداع</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="payment-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-md p-5 sm:p-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="receipt" class="w-4 h-4 text-emerald-400"></i>
+          سداد قسط جمعية
+        </h3>
+        <button onclick="closeModal('payment-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <form id="payment-form" onsubmit="handleConfirmPayment(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="pay-rosca-id" />
+        <input type="hidden" id="pay-cycle-index" />
+        <div class="p-3.5 rounded-xl sunken-3d space-y-1">
+          <div class="flex justify-between"><span class="text-slate-400">الجمعية:</span><span id="pay-rosca-name" class="font-bold text-white"></span></div>
+          <div class="flex justify-between"><span class="text-slate-400">القسط:</span><span id="pay-cycle-label" class="font-bold text-emerald-400"></span></div>
+          <div class="flex justify-between"><span class="text-slate-400">المبلغ:</span><span id="pay-amount-label" class="font-black text-white text-sm"></span></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ الاستحقاق</label>
+            <input type="text" id="pay-scheduled-date" readonly class="w-full rounded-xl sunken-3d p-2.5 text-slate-400 font-bold cursor-not-allowed" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ السداد الفعلي *</label>
+            <input type="date" id="pay-actual-date" required class="w-full rounded-xl sunken-3d p-2.5 text-white font-bold focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">طريقة السداد</label>
+          <select id="pay-method" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none">
+            <option value="إنستاباي (InstaPay)">إنستاباي (InstaPay)</option>
+            <option value="محفظة إلكترونية">محفظة إلكترونية</option>
+            <option value="تحويل بنكي">تحويل بنكي</option>
+            <option value="كاش نقدي">كاش نقدي</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">رقم الإيصال / مرجع</label>
+          <input type="text" id="pay-ref" placeholder="رقم المعاملة أو الإيصال (اختياري)" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div class="flex items-center gap-2 p-2.5 rounded-xl sunken-3d">
+          <input type="checkbox" id="pay-deduct-cash" class="w-4 h-4 rounded text-emerald-500 bg-slate-800 border-slate-700 cursor-pointer" />
+          <label for="pay-deduct-cash" class="text-[11px] text-slate-300 cursor-pointer">خصم القيمة من الكاش الحر المتاح</label>
+        </div>
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal('payment-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white font-bold btn-3d">تأكيد السداد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="payout-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-md p-5 sm:p-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="hand-coins" class="w-4 h-4 text-indigo-400"></i>
+          قبض الجمعية
+        </h3>
+        <button onclick="closeModal('payout-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <form id="payout-form" onsubmit="handleConfirmPayout(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="payout-rosca-id" />
+        <div class="p-3.5 rounded-xl sunken-3d space-y-1">
+          <div class="flex justify-between"><span class="text-slate-300">الجمعية:</span><span id="payout-modal-name" class="font-bold text-white"></span></div>
+          <div class="flex justify-between"><span class="text-slate-300">مبلغ القبض:</span><span id="payout-modal-amount" class="font-black text-indigo-300 text-base"></span></div>
+          <div class="flex justify-between"><span class="text-slate-300">دور القبض:</span><span id="payout-modal-cycle" class="font-bold text-white"></span></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">موعد القبض المحدد</label>
+            <input type="text" id="payout-scheduled-date" readonly class="w-full rounded-xl sunken-3d p-2.5 text-slate-400 font-bold cursor-not-allowed" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ الاستلام الفعلي *</label>
+            <input type="date" id="payout-actual-date" required class="w-full rounded-xl sunken-3d p-2.5 text-white font-bold focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">طريقة الاستلام</label>
+          <select id="payout-method" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none">
+            <option value="كاش نقدي">كاش نقدي</option>
+            <option value="إنستاباي (InstaPay)">إنستاباي (InstaPay)</option>
+            <option value="تحويل بنكي">تحويل بنكي</option>
+            <option value="محفظة إلكترونية">محفظة إلكترونية</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2 p-2.5 rounded-xl sunken-3d">
+          <input type="checkbox" id="payout-add-cash" class="w-4 h-4 rounded text-indigo-500 bg-slate-800 border-slate-700 cursor-pointer" />
+          <label for="payout-add-cash" class="text-[11px] text-slate-300 cursor-pointer">إيداع المبلغ في رصيد الكاش</label>
+        </div>
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal('payout-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold btn-3d">تأكيد الاستلام</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="settle-debt-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-md p-5 sm:p-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="receipt" class="w-4 h-4 text-sky-400"></i>
+          تسجيل دفعة دين
+        </h3>
+        <button onclick="closeModal('settle-debt-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <form id="settle-form" onsubmit="handleConfirmSettlement(event)" class="space-y-3 text-xs">
+        <input type="hidden" id="settle-debt-id" />
+        <div class="p-3.5 rounded-xl sunken-3d space-y-1">
+          <div class="flex justify-between"><span class="text-slate-400">الطرف الآخر:</span><span id="settle-person-name" class="font-bold text-white"></span></div>
+          <div class="flex justify-between"><span class="text-slate-400">المتبقي:</span><span id="settle-remaining-amount" class="font-black text-sky-400 text-sm"></span></div>
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">المبلغ المسدد الآن *</label>
+            <input type="number" id="settle-amount" min="1" placeholder="أدخل مبلغ السداد" required class="w-full rounded-xl sunken-3d p-2.5 text-white font-bold focus:outline-none" />
+          </div>
+          <div>
+            <label class="block font-semibold text-slate-300 mb-1">تاريخ السداد *</label>
+            <input type="date" id="settle-date" required class="w-full rounded-xl sunken-3d p-2.5 text-white font-bold focus:outline-none" />
+          </div>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">طريقة المعاملة</label>
+          <select id="settle-method" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none">
+            <option value="كاش نقدي">كاش نقدي</option>
+            <option value="إنستاباي (InstaPay)">إنستاباي (InstaPay)</option>
+            <option value="محفظة إلكترونية">محفظة إلكترونية</option>
+            <option value="تحويل بنكي">تحويل بنكي</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-semibold text-slate-300 mb-1">رقم الإيصال / مرجع</label>
+          <input type="text" id="settle-ref" placeholder="رقم المعاملة أو الإيصال (اختياري)" class="w-full rounded-xl sunken-3d p-2.5 text-white focus:outline-none" />
+        </div>
+        <div class="flex items-center gap-2 p-2.5 rounded-xl sunken-3d">
+          <input type="checkbox" id="settle-sync-cash" class="w-4 h-4 rounded text-sky-500 bg-slate-800 border-slate-700 cursor-pointer" />
+          <label for="settle-sync-cash" id="settle-sync-label" class="text-[11px] text-slate-300 cursor-pointer">مزامنة الدفعة تلقائياً مع الكاش الحر</label>
+        </div>
+        <div class="pt-2 flex justify-end gap-2 border-t border-slate-800">
+          <button type="button" onclick="closeModal('settle-debt-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 font-medium">إلغاء</button>
+          <button type="submit" class="px-5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white font-bold btn-3d">تأكيد السداد</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="schedule-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="box-3d w-full max-w-2xl p-5 sm:p-6 my-6 relative max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <div>
+          <h3 id="schedule-title" class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="list-ordered" class="w-4 h-4 text-emerald-400"></i>
+            جدول استحقاقات الجمعية
+          </h3>
+          <p id="schedule-subtitle" class="text-[11px] text-slate-400 mt-0.5"></p>
+        </div>
+        <button onclick="closeModal('schedule-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div id="schedule-table-container" class="flex-1 overflow-y-auto space-y-2 pr-1 text-xs"></div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeModal('schedule-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold btn-3d">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="debt-history-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-3 sm:p-4">
+    <div class="box-3d w-full max-w-xl p-5 sm:p-6 relative max-h-[85vh] flex flex-col">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <div>
+          <h3 id="debt-history-title" class="text-sm sm:text-base font-bold text-white flex items-center gap-2">
+            <i data-lucide="history" class="w-4 h-4 text-sky-400"></i>
+            سجل دفعات المعاملة
+          </h3>
+          <p id="debt-history-subtitle" class="text-[11px] text-slate-400 mt-0.5"></p>
+        </div>
+        <button onclick="closeModal('debt-history-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div id="debt-history-container" class="flex-1 overflow-y-auto space-y-2 pr-1 text-xs"></div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeModal('debt-history-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300 text-xs font-bold btn-3d">إغلاق</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="cash-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-sm p-5 relative">
+      <h3 class="text-sm font-bold text-white mb-1">تحديث الكاش الحر المتاح</h3>
+      <input type="number" id="input-cash" placeholder="0" class="w-full rounded-xl sunken-3d p-3 text-lg font-bold text-white my-3 focus:outline-none" />
+      <div class="flex justify-end gap-2 text-xs">
+        <button onclick="closeModal('cash-modal')" class="px-4 py-2 rounded-xl bg-slate-800 text-slate-300">إلغاء</button>
+        <button onclick="saveAvailableCash()" class="px-4 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 font-bold text-white btn-3d">تأكيد الحفظ</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="backup-modal" class="fixed inset-0 z-50 bg-black/80 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="box-3d w-full max-w-md p-5 sm:p-6 relative">
+      <div class="flex items-center justify-between pb-3 mb-3 border-b border-slate-800">
+        <h3 class="text-sm font-bold text-white flex items-center gap-2">
+          <i data-lucide="sheet" class="w-4 h-4 text-emerald-400"></i>
+          تصدير واستيراد البيانات
+        </h3>
+        <button onclick="closeModal('backup-modal')" class="text-slate-400 hover:text-white"><i data-lucide="x" class="w-4 h-4"></i></button>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3 pt-2 text-xs">
+        <button onclick="exportUnifiedExcelSheet()" class="flex items-center justify-center gap-2 p-3 rounded-xl sunken-3d font-bold text-emerald-400 btn-3d">
+          <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+          تصدير النسخة
+        </button>
+        
+        <label class="flex items-center justify-center gap-2 p-3 rounded-xl sunken-3d font-bold text-indigo-400 cursor-pointer btn-3d">
+          <i data-lucide="upload" class="w-4 h-4"></i>
+          استيراد نسخة
+          <input type="file" id="import-unified-file" onchange="importUnifiedExcelSheet(event)" class="hidden" accept=".csv,.json,.txt" />
+        </label>
+      </div>
+    </div>
+  </div>
+
+  <div id="app-toast" class="fixed bottom-5 left-5 z-50 px-4 py-3 rounded-xl bg-slate-900 border border-emerald-500/40 text-white shadow-2xl text-xs font-bold flex items-center gap-2 transition-all transform translate-y-24 opacity-0 pointer-events-none">
+    <i data-lucide="check-circle-2" class="w-4 h-4 text-emerald-400"></i>
+    <span id="toast-text">تمت العملية بنجاح</span>
+  </div>
+
+  <script>
+    const SYSTEM_STORE_KEY = 'financial_system_master_v7';
+    const USERS_STORE_KEY = 'financial_system_users_v7';
+    const SESSION_STORE_KEY = 'financial_system_active_session_v7';
+    const STATIC_FIREBASE_BASE_URL = 'https://gm3yty-6d410-default-rtdb.firebaseio.com';
+
+    let currentTab = 'jamiyati';
+    let calDate = new Date();
+    let calDateDewan = new Date();
+    let calDatePlanning = new Date();
+
+    let currentSelectedDateKey = null;
+    let currentSelectedDateKeyDewan = null;
+    let currentSelectedDateKeyPlanning = null;
+
+    let dewanFilter = 'all';
+    let activeUrgentNotifications = [];
+
+    let systemConfig = {
+      appName: 'الإدارة المالية',
+      headerLogoUrl: '',
+      faviconUrl: '',
+      currencySymbol: 'ج.م',
+      cloudUrl: STATIC_FIREBASE_BASE_URL,
+      cloudToken: '',
+      autoSyncCloud: true
+    };
+
+    let usersList = [
+      {
+        id: 'u_admin_23',
+        username: '23',
+        password: '2003',
+        fullname: 'المدير العام',
+        role: 'admin',
+        isActive: true,
+        lastLogin: new Date().toISOString(),
+        createdAt: '2026-09-01'
+      }
+    ];
+
+    let currentUser = null;
+
+    const defaultUserState = {
+      availableCash: 0,
+      notes: {},
+      dewanNotes: {},
+      planningNotes: {},
+      roscas: [],
+      debts: [],
+      plans: []
+    };
+
+    let state = { ...defaultUserState };
+
+    function showSystemAlert(message, type = 'warning', title = 'تنبيه النظام') {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('sys-dialog-modal');
+        const iconWrap = document.getElementById('sys-dialog-icon-wrap');
+        const icon = document.getElementById('sys-dialog-icon');
+        const titleEl = document.getElementById('sys-dialog-title');
+        const msgEl = document.getElementById('sys-dialog-msg');
+        const actionsEl = document.getElementById('sys-dialog-actions');
+
+        titleEl.innerText = title;
+        msgEl.innerText = message;
+
+        const styles = {
+          warning: { bg: 'bg-amber-500/20 text-amber-400 border border-amber-500/30', btn: 'bg-amber-500 hover:bg-amber-600', ico: 'alert-triangle' },
+          danger:  { bg: 'bg-rose-500/20 text-rose-400 border border-rose-500/30', btn: 'bg-rose-500 hover:bg-rose-600', ico: 'shield-alert' },
+          info:    { bg: 'bg-sky-500/20 text-sky-400 border border-sky-500/30', btn: 'bg-sky-500 hover:bg-sky-600', ico: 'info' },
+          success: { bg: 'bg-emerald-500/20 text-emerald-400 border border-emerald-500/30', btn: 'bg-emerald-500 hover:bg-emerald-600', ico: 'check-circle-2' }
+        };
+        const s = styles[type] || styles.warning;
+        iconWrap.className = `w-12 h-12 rounded-2xl mx-auto mb-3.5 flex items-center justify-center btn-3d ${s.bg}`;
+        icon.setAttribute('data-lucide', s.ico);
+
+        actionsEl.innerHTML = `<button id="sys-dialog-ok" class="w-full py-2.5 rounded-xl font-bold text-xs text-white btn-3d ${s.btn}">حسناً، فهمت</button>`;
+        modal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+
+        document.getElementById('sys-dialog-ok').onclick = () => {
+          modal.classList.add('hidden');
+          resolve(true);
+        };
+      });
+    }
+
+    function showSystemConfirm(message, title = 'تأكيد العملية', isDestructive = false) {
+      return new Promise((resolve) => {
+        const modal = document.getElementById('sys-dialog-modal');
+        const iconWrap = document.getElementById('sys-dialog-icon-wrap');
+        const icon = document.getElementById('sys-dialog-icon');
+        const titleEl = document.getElementById('sys-dialog-title');
+        const msgEl = document.getElementById('sys-dialog-msg');
+        const actionsEl = document.getElementById('sys-dialog-actions');
+
+        titleEl.innerText = title;
+        msgEl.innerText = message;
+
+        iconWrap.className = `w-12 h-12 rounded-2xl mx-auto mb-3.5 flex items-center justify-center btn-3d ${
+          isDestructive ? 'bg-rose-500/20 text-rose-400 border border-rose-500/30' : 'bg-indigo-500/20 text-indigo-400 border border-indigo-500/30'
+        }`;
+        icon.setAttribute('data-lucide', isDestructive ? 'alert-triangle' : 'help-circle');
+
+        actionsEl.innerHTML = `
+          <button id="sys-dialog-cancel" class="flex-1 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-300 font-bold text-xs btn-3d">إلغاء</button>
+          <button id="sys-dialog-confirm" class="flex-1 py-2.5 rounded-xl font-bold text-xs text-white btn-3d ${
+            isDestructive ? 'bg-rose-600 hover:bg-rose-700' : 'bg-emerald-500 hover:bg-emerald-600'
+          }">تأكيد</button>
+        `;
+
+        modal.classList.remove('hidden');
+        if (window.lucide) lucide.createIcons();
+
+        document.getElementById('sys-dialog-cancel').onclick = () => {
+          modal.classList.add('hidden');
+          resolve(false);
+        };
+        document.getElementById('sys-dialog-confirm').onclick = () => {
+          modal.classList.add('hidden');
+          resolve(true);
+        };
+      });
+    }
+
+    async function fetchCloudGlobalConfig() {
+      try {
+        let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/global_config.json`;
+        const res = await fetch(endpoint);
+        if (res.ok) {
+          const cloudConfig = await res.json();
+          if (cloudConfig) {
+            if (cloudConfig.faviconUrl) systemConfig.faviconUrl = cloudConfig.faviconUrl;
+            if (cloudConfig.appName) systemConfig.appName = cloudConfig.appName;
+            if (cloudConfig.headerLogoUrl) systemConfig.headerLogoUrl = cloudConfig.headerLogoUrl;
+            if (cloudConfig.currencySymbol) systemConfig.currencySymbol = cloudConfig.currencySymbol;
+            localStorage.setItem('financial_system_config_v7', JSON.stringify(systemConfig));
+            applyBrandingToUI();
+          }
+        }
+      } catch (err) {}
+    }
+
+    async function syncConfigToCloud(configToSave) {
+      try {
+        let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/global_config.json`;
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            appName: configToSave.appName,
+            headerLogoUrl: configToSave.headerLogoUrl,
+            faviconUrl: configToSave.faviconUrl,
+            currencySymbol: configToSave.currencySymbol,
+            updatedAt: new Date().toISOString()
+          })
+        });
+      } catch (e) {}
+    }
+
+    async function fetchCloudUsersList() {
+      try {
+        let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/all_users.json`;
+        const res = await fetch(endpoint);
+        if (res.ok) {
+          const cloudUsers = await res.json();
+          if (cloudUsers && Array.isArray(cloudUsers) && cloudUsers.length > 0) {
+            usersList = cloudUsers;
+            localStorage.setItem(USERS_STORE_KEY, JSON.stringify(usersList));
+          }
+        }
+      } catch (err) {}
+    }
+
+    async function syncUsersListToCloud() {
+      try {
+        let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/all_users.json`;
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(usersList)
+        });
+      } catch (e) {}
+    }
+
+    async function loadUsersAndConfig() {
+      const rawUsers = localStorage.getItem(USERS_STORE_KEY);
+      if (rawUsers) {
+        try { usersList = JSON.parse(rawUsers); } catch(e){}
+      }
+
+      if (!usersList.some(u => u.username === '23')) {
+        usersList.push({
+          id: 'u_admin_23',
+          username: '23',
+          password: '2003',
+          fullname: 'المدير العام',
+          role: 'admin',
+          isActive: true,
+          lastLogin: new Date().toISOString(),
+          createdAt: '2026-09-01'
+        });
+        localStorage.setItem(USERS_STORE_KEY, JSON.stringify(usersList));
+      }
+
+      const rawCfg = localStorage.getItem('financial_system_config_v7');
+      if (rawCfg) {
+        try { systemConfig = { ...systemConfig, ...JSON.parse(rawCfg) }; } catch(e){}
+      }
+      systemConfig.cloudUrl = STATIC_FIREBASE_BASE_URL;
+      applyBrandingToUI();
+      
+      fetchCloudGlobalConfig();
+      await fetchCloudUsersList();
+    }
+
+    function toggleAuthMode(mode) {
+      const btnLogin = document.getElementById('tab-auth-login');
+      const btnReg = document.getElementById('tab-auth-register');
+      const fLogin = document.getElementById('form-login');
+      const fReg = document.getElementById('form-register');
+
+      if (mode === 'login') {
+        btnLogin.className = "flex-1 py-2 rounded-xl bg-emerald-500 text-white btn-3d";
+        btnReg.className = "flex-1 py-2 rounded-xl text-slate-400 hover:text-white transition";
+        fLogin.classList.remove('hidden');
+        fReg.classList.add('hidden');
+      } else {
+        btnReg.className = "flex-1 py-2 rounded-xl bg-emerald-500 text-white btn-3d";
+        btnLogin.className = "flex-1 py-2 rounded-xl text-slate-400 hover:text-white transition";
+        fReg.classList.remove('hidden');
+        fLogin.classList.add('hidden');
+      }
+    }
+
+    async function handleAuthLogin(e) {
+      e.preventDefault();
+      const uInput = document.getElementById('login-username').value.trim();
+      const pInput = document.getElementById('login-password').value.trim();
+
+      await fetchCloudUsersList();
+
+      const user = usersList.find(u => u.username === uInput && u.password === pInput);
+      if (!user) {
+        await showSystemAlert('اسم المستخدم أو كلمة المرور غير صحيحة، يُرجى التأكد من البيانات والمحاولة مجدداً.', 'danger', 'خطأ في المصادقة');
+        return;
+      }
+
+      if (!user.isActive) {
+        await showSystemAlert('تم تعليق هذا الحساب بواسطة إدارة النظام.', 'danger', 'الحساب معلق');
+        return;
+      }
+
+      user.lastLogin = new Date().toISOString();
+      localStorage.setItem(USERS_STORE_KEY, JSON.stringify(usersList));
+      localStorage.setItem(SESSION_STORE_KEY, JSON.stringify(user));
+      syncUsersListToCloud();
+
+      currentUser = user;
+      document.getElementById('auth-screen').classList.add('hidden');
+      await loadUserData(user.username);
+    }
+
+    async function handleAuthRegister(e) {
+      e.preventDefault();
+      const fullname = document.getElementById('reg-fullname').value.trim();
+      const username = document.getElementById('reg-username').value.trim();
+      const pass = document.getElementById('reg-password').value.trim();
+      const passConf = document.getElementById('reg-password-confirm').value.trim();
+
+      if (pass !== passConf) {
+        await showSystemAlert('كلمات المرور المدخلة غير متطابقة، يرجى كتابتها بدقة.', 'warning', 'تطابق كلمة المرور');
+        return;
+      }
+
+      await fetchCloudUsersList();
+
+      if (usersList.some(u => u.username.toLowerCase() === username.toLowerCase())) {
+        await showSystemAlert('اسم المستخدم هذا مسجل مسبقاً، اختر اسم مستخدم آخر.', 'warning', 'اسم المستخدم محجوز');
+        return;
+      }
+
+      const newUser = {
+        id: 'u_' + Date.now(),
+        username: username,
+        password: pass,
+        fullname: fullname,
+        role: 'user',
+        isActive: true,
+        lastLogin: new Date().toISOString(),
+        createdAt: new Date().toISOString().split('T')[0]
+      };
+
+      usersList.push(newUser);
+      localStorage.setItem(USERS_STORE_KEY, JSON.stringify(usersList));
+      await syncUsersListToCloud();
+
+      const initialStore = { ...defaultUserState };
+      state = { ...initialStore };
+      const userKey = `${SYSTEM_STORE_KEY}_${newUser.username}`;
+      localStorage.setItem(userKey, JSON.stringify(state));
+
+      currentUser = newUser;
+      localStorage.setItem(SESSION_STORE_KEY, JSON.stringify(newUser));
+      document.getElementById('auth-screen').classList.add('hidden');
+      
+      await saveAppState();
+    }
+
+    function checkActiveSession() {
+      const rawSession = localStorage.getItem(SESSION_STORE_KEY);
+      if (rawSession) {
+        try {
+          const user = JSON.parse(rawSession);
+          const freshUser = usersList.find(u => u.username === user.username);
+          if (freshUser && freshUser.isActive) {
+            currentUser = freshUser;
+            document.getElementById('auth-screen').classList.add('hidden');
+            loadUserData(freshUser.username);
+            return;
+          }
+        } catch(e){}
+      }
+      document.getElementById('auth-screen').classList.remove('hidden');
+    }
+
+    async function logoutCurrentUser() {
+      const confirmed = await showSystemConfirm('هل أنت متأكد من رغبتك في تسجيل الخروج من النظام؟', 'تسجيل الخروج');
+      if (confirmed) {
+        localStorage.removeItem(SESSION_STORE_KEY);
+        currentUser = null;
+        document.getElementById('auth-screen').classList.remove('hidden');
+      }
+    }
+
+    async function loadUserData(username) {
+      const userKey = `${SYSTEM_STORE_KEY}_${username}`;
+      state = { ...defaultUserState };
+
+      try {
+        let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/accounts/${encodeURIComponent(username)}.json`;
+        const res = await fetch(endpoint);
+        if (res.ok) {
+          const cloudData = await res.json();
+          if (cloudData && cloudData.userData) {
+            state = { ...defaultUserState, ...cloudData.userData };
+            localStorage.setItem(userKey, JSON.stringify(state));
+          }
+        }
+      } catch (err) {}
+
+      if (!state.roscas || state.roscas.length === 0) {
+        const raw = localStorage.getItem(userKey);
+        if (raw) {
+          try { state = JSON.parse(raw); } catch (e) {}
+        }
+      }
+
+      updateUserUIBadges();
+      renderUnifiedUI();
+    }
+
+    function updateUserUIBadges() {
+      const badge = document.getElementById('user-badge');
+      const adminBtn = document.getElementById('admin-settings-btn');
+      const faviconAdminSec = document.getElementById('favicon-admin-section');
+
+      if (currentUser) {
+        const isAdmin = (currentUser.username === '23' || currentUser.role === 'admin');
+        badge.innerText = `${currentUser.fullname || currentUser.username}`;
+        
+        if (isAdmin) {
+          adminBtn.classList.remove('hidden');
+          if (faviconAdminSec) faviconAdminSec.classList.remove('hidden');
+        } else {
+          adminBtn.classList.add('hidden');
+          if (faviconAdminSec) faviconAdminSec.classList.add('hidden');
+        }
+      }
+    }
+
+    async function saveAppState() {
+      if (!currentUser) return;
+      const userKey = `${SYSTEM_STORE_KEY}_${currentUser.username}`;
+      localStorage.setItem(userKey, JSON.stringify(state));
+
+      renderUnifiedUI();
+
+      try {
+        let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/accounts/${encodeURIComponent(currentUser.username)}.json`;
+        await fetch(endpoint, {
+          method: 'PUT',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            updatedAt: new Date().toISOString(),
+            userData: state,
+            fullname: currentUser.fullname || currentUser.username
+          })
+        });
+      } catch (e) {}
+    }
+
+    function handleHeaderLogoUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        systemConfig.headerLogoUrl = e.target.result;
+        document.getElementById('cfg-header-logo-url').value = '';
+        previewHeaderLogo(systemConfig.headerLogoUrl);
+        triggerToast('تم تجهيز الشعار بنجاح');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewHeaderFromUrl(url) {
+      systemConfig.headerLogoUrl = url.trim();
+      previewHeaderLogo(systemConfig.headerLogoUrl);
+    }
+
+    function previewHeaderLogo(src) {
+      const preview = document.getElementById('modal-logo-preview');
+      if (src) {
+        preview.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
+      } else {
+        preview.innerHTML = `<i data-lucide="image" class="w-5 h-5 text-slate-500"></i>`;
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function resetHeaderLogo() {
+      systemConfig.headerLogoUrl = '';
+      document.getElementById('cfg-header-logo-url').value = '';
+      document.getElementById('header-logo-input').value = '';
+      previewHeaderLogo('');
+    }
+
+    function handleFaviconUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        systemConfig.faviconUrl = e.target.result;
+        document.getElementById('cfg-favicon-url').value = '';
+        previewFavicon(systemConfig.faviconUrl);
+        triggerToast('تم تجهيز أيقونة الرابط');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function previewFaviconFromUrl(url) {
+      systemConfig.faviconUrl = url.trim();
+      previewFavicon(systemConfig.faviconUrl);
+    }
+
+    function previewFavicon(src) {
+      const preview = document.getElementById('modal-favicon-preview');
+      if (src) {
+        preview.innerHTML = `<img src="${src}" class="w-full h-full object-cover">`;
+      } else {
+        preview.innerHTML = `<i data-lucide="globe" class="w-5 h-5 text-slate-500"></i>`;
+        if (window.lucide) lucide.createIcons();
+      }
+    }
+
+    function resetFaviconIcon() {
+      systemConfig.faviconUrl = '';
+      document.getElementById('cfg-favicon-url').value = '';
+      document.getElementById('favicon-file-input').value = '';
+      previewFavicon('');
+    }
+
+    async function saveUserBranding() {
+      systemConfig.appName = document.getElementById('cfg-app-name').value.trim() || 'الإدارة المالية';
+      systemConfig.currencySymbol = document.getElementById('cfg-app-currency').value.trim() || 'ج.م';
+
+      const hUrl = document.getElementById('cfg-header-logo-url').value.trim();
+      if (hUrl) systemConfig.headerLogoUrl = hUrl;
+
+      const isAdmin = (currentUser && (currentUser.username === '23' || currentUser.role === 'admin'));
+      if (isAdmin) {
+        const fUrl = document.getElementById('cfg-favicon-url').value.trim();
+        if (fUrl) systemConfig.faviconUrl = fUrl;
+      }
+
+      localStorage.setItem('financial_system_config_v7', JSON.stringify(systemConfig));
+      applyBrandingToUI();
+      
+      if (isAdmin) {
+        await syncConfigToCloud(systemConfig);
+      }
+
+      closeModal('branding-modal');
+      triggerToast('تم حفظ وتحديث الواجهة بنجاح');
+    }
+
+    function applyBrandingToUI() {
+      const titleEl = document.getElementById('brand-title');
+      const authTitleEl = document.getElementById('auth-app-title');
+      const metaTitle = document.getElementById('app-meta-title');
+      const logoIcon = document.getElementById('app-logo-icon');
+      const authLogo = document.getElementById('auth-logo-preview');
+      const dynamicFavicon = document.getElementById('app-dynamic-favicon');
+      const appleTouchIcon = document.getElementById('app-apple-touch-icon');
+
+      const name = systemConfig.appName || 'الإدارة المالية';
+      if (titleEl) titleEl.innerText = name;
+      if (authTitleEl) authTitleEl.innerText = name;
+      if (metaTitle) metaTitle.innerText = name;
+
+      const sym = systemConfig.currencySymbol || 'ج.م';
+      document.querySelectorAll('.currency-symbol').forEach(el => el.innerText = sym);
+      document.querySelectorAll('.currency-symbol-month').forEach(el => el.innerText = `${sym}/شهر`);
+
+      if (systemConfig.headerLogoUrl) {
+        logoIcon.innerHTML = `<img src="${systemConfig.headerLogoUrl}" class="w-full h-full object-cover">`;
+        authLogo.innerHTML = `<img src="${systemConfig.headerLogoUrl}" class="w-full h-full object-cover">`;
+      } else {
+        const iconName = currentTab === 'jamiyati' ? 'wallet-cards' : (currentTab === 'dewan' ? 'scale' : 'target');
+        logoIcon.innerHTML = `<i id="logo-icon-svg" data-lucide="${iconName}" class="w-5 h-5"></i>`;
+        authLogo.innerHTML = `<i id="auth-logo-icon" data-lucide="shield-check" class="w-8 h-8"></i>`;
+      }
+
+      if (systemConfig.faviconUrl) {
+        dynamicFavicon.href = systemConfig.faviconUrl;
+        if (appleTouchIcon) appleTouchIcon.href = systemConfig.faviconUrl;
+      } else {
+        dynamicFavicon.href = "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%2310b981'><path d='M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5'/></svg>";
+      }
+
+      const inName = document.getElementById('cfg-app-name');
+      const inCur = document.getElementById('cfg-app-currency');
+      const inHeadLogo = document.getElementById('cfg-header-logo-url');
+      const inFavLogo = document.getElementById('cfg-favicon-url');
+
+      if (inName) inName.value = systemConfig.appName;
+      if (inCur) inCur.value = systemConfig.currencySymbol || 'ج.م';
+      if (inHeadLogo && !systemConfig.headerLogoUrl.startsWith('data:image')) inHeadLogo.value = systemConfig.headerLogoUrl || '';
+      if (inFavLogo && !systemConfig.faviconUrl.startsWith('data:image')) inFavLogo.value = systemConfig.faviconUrl || '';
+
+      previewHeaderLogo(systemConfig.headerLogoUrl);
+      previewFavicon(systemConfig.faviconUrl);
+    }
+
+    async function renderAdminDashboard() {
+      if (!currentUser || currentUser.username !== '23') return;
+
+      await fetchCloudUsersList();
+
+      const totalUsers = usersList.length;
+      const activeUsers = usersList.filter(u => u.isActive).length;
+      const lockedUsers = totalUsers - activeUsers;
+
+      let totalRecords = 0;
+      usersList.forEach(u => {
+        const raw = localStorage.getItem(`${SYSTEM_STORE_KEY}_${u.username}`);
+        if (raw) {
+          try {
+            const st = JSON.parse(raw);
+            totalRecords += (st.roscas ? st.roscas.length : 0) + (st.debts ? st.debts.length : 0) + (st.plans ? st.plans.length : 0);
+          } catch(e){}
+        }
+      });
+
+      document.getElementById('rep-total-users').innerText = totalUsers;
+      document.getElementById('rep-active-users').innerText = activeUsers;
+      document.getElementById('rep-locked-users').innerText = lockedUsers;
+      document.getElementById('rep-total-records').innerText = totalRecords;
+
+      const container = document.getElementById('users-management-list');
+      container.innerHTML = '';
+
+      usersList.forEach(u => {
+        const isMaster = (u.username === '23');
+        const userStorageKey = `${SYSTEM_STORE_KEY}_${u.username}`;
+        const raw = localStorage.getItem(userStorageKey);
+        let countR = 0, countD = 0, countP = 0;
+        if (raw) {
+          try {
+            const st = JSON.parse(raw);
+            countR = st.roscas ? st.roscas.length : 0;
+            countD = st.debts ? st.debts.length : 0;
+            countP = st.plans ? st.plans.length : 0;
+          } catch(e){}
+        }
+
+        const card = document.createElement('div');
+        card.className = "p-3.5 rounded-2xl sunken-3d flex flex-col sm:flex-row sm:items-center justify-between gap-3";
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-9 h-9 rounded-xl ${u.isActive ? 'bg-emerald-500/20 text-emerald-400' : 'bg-rose-500/20 text-rose-400'} flex items-center justify-center font-black btn-3d">
+              ${u.username.slice(0, 2).toUpperCase()}
+            </div>
+            <div>
+              <div class="flex items-center gap-2 flex-wrap">
+                <span class="font-extrabold text-white">${u.fullname || u.username}</span>
+                <span class="text-[10px] text-slate-400">(@${u.username})</span>
+                ${u.isActive ? '<span class="text-[10px] bg-emerald-500/15 text-emerald-400 font-bold px-2 py-0.5 rounded border border-emerald-500/30">نشط</span>' : '<span class="text-[10px] bg-rose-500/15 text-rose-400 font-bold px-2 py-0.5 rounded border border-rose-500/30">معلق</span>'}
+              </div>
+              <p class="text-[10px] text-slate-400 mt-1">البيانات: <strong class="text-emerald-300">${countR} جمعيات</strong> | <strong class="text-sky-300">${countD} ديون</strong> | <strong class="text-purple-300">${countP} خطط</strong></p>
+            </div>
+          </div>
+          <div class="flex items-center gap-2 self-end sm:self-auto flex-wrap">
+            ${!isMaster ? `
+              <button onclick="adminToggleUserStatus('${u.id}')" class="px-2.5 py-1.5 rounded-xl text-xs font-bold transition btn-3d ${u.isActive ? 'bg-amber-500/20 text-amber-300 border border-amber-500/40' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/40'}">${u.isActive ? 'قفل' : 'تفعيل'}</button>
+              <button onclick="adminWipeUserInventory('${u.username}')" class="px-2.5 py-1.5 rounded-xl bg-rose-500/20 text-rose-300 border border-rose-500/40 text-xs font-bold transition btn-3d">مسح البيانات</button>
+              <button onclick="adminDeleteUser('${u.id}')" class="p-1.5 rounded-xl bg-slate-900 hover:bg-rose-600 text-slate-400 hover:text-white border border-slate-700 transition btn-3d"><i data-lucide="trash-2" class="w-3.5 h-3.5"></i></button>
+            ` : ''}
+          </div>
+        `;
+        container.appendChild(card);
+      });
+      if (window.lucide) lucide.createIcons();
+    }
+
+    async function adminToggleUserStatus(userId) {
+      const u = usersList.find(x => x.id === userId);
+      if (!u || u.username === '23') return;
+      u.isActive = !u.isActive;
+      localStorage.setItem(USERS_STORE_KEY, JSON.stringify(usersList));
+      await syncUsersListToCloud();
+      renderAdminDashboard();
+    }
+
+    async function adminWipeUserInventory(username) {
+      if (username === '23') return;
+      const confirmed = await showSystemConfirm(`هل أنت متأكد من مسح جميع بيانات (${username}) بشكل نهائي؟`, 'مسح البيانات', true);
+      if (confirmed) {
+        const freshEmpty = { ...defaultUserState };
+        localStorage.setItem(`${SYSTEM_STORE_KEY}_${username}`, JSON.stringify(freshEmpty));
+        try {
+          let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/accounts/${encodeURIComponent(username)}.json`;
+          await fetch(endpoint, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ updatedAt: new Date().toISOString(), userData: freshEmpty })
+          });
+        } catch(e){}
+        renderAdminDashboard();
+        triggerToast('تم مسح البيانات بنجاح');
+      }
+    }
+
+    async function adminDeleteUser(userId) {
+      const u = usersList.find(x => x.id === userId);
+      if (!u || u.username === '23') return;
+      const confirmed = await showSystemConfirm(`هل أنت متأكد من حذف الحساب (${u.username}) نهائياً؟`, 'حذف الحساب', true);
+      if (confirmed) {
+        localStorage.removeItem(`${SYSTEM_STORE_KEY}_${u.username}`);
+        usersList = usersList.filter(x => x.id !== userId);
+        localStorage.setItem(USERS_STORE_KEY, JSON.stringify(usersList));
+        await syncUsersListToCloud();
+        try {
+          let endpoint = `${STATIC_FIREBASE_BASE_URL.replace(/\/$/, "")}/financial_system/accounts/${encodeURIComponent(u.username)}.json`;
+          await fetch(endpoint, { method: 'DELETE' });
+        } catch(e){}
+        renderAdminDashboard();
+        triggerToast('تم حذف الحساب بنجاح');
+      }
+    }
+
+    function getTodayKey() {
+      const now = new Date();
+      return `${now.getFullYear()}-${String(now.getMonth() + 1).padStart(2, '0')}-${String(now.getDate()).padStart(2, '0')}`;
+    }
+
+    function formatReadableDate(dateKey) {
+      if (!dateKey) return '';
+      try {
+        const [y, m, d] = dateKey.split('-').map(Number);
+        const dt = new Date(y, m - 1, d);
+        const days = ['الأحد', 'الاثنين', 'الثلاثاء', 'الأربعاء', 'الخميس', 'الجمعة', 'السبت'];
+        const months = ['يناير', 'فبراير', 'مارس', 'أبريل', 'مايو', 'يونيو', 'يوليو', 'أغسطس', 'سبتمبر', 'أكتوبر', 'نوفمبر', 'ديسمبر'];
+        return `${days[dt.getDay()]} ${d} ${months[m - 1]} ${y}`;
+      } catch (e) {
+        return dateKey;
+      }
+    }
+
+    function switchTab(tab) {
+      currentTab = tab;
+      const pageJamiyati = document.getElementById('page-jamiyati');
+      const pageDewan = document.getElementById('page-dewan');
+      const pagePlanning = document.getElementById('page-planning');
+      const ambientContainer = document.getElementById('ambient-container');
+      const mainHeader = document.getElementById('main-header');
+
+      const btnJamiyati = document.getElementById('tab-btn-jamiyati');
+      const btnDewan = document.getElementById('tab-btn-dewan');
+      const btnPlanning = document.getElementById('tab-btn-planning');
+
+      const logoIcon = document.getElementById('app-logo-icon');
+      const ctaContainer = document.getElementById('dynamic-cta-container');
+      const paletteIcon = document.getElementById('palette-icon');
+      const backupIcon = document.getElementById('backup-icon');
+
+      pageJamiyati.classList.add('hidden');
+      pageDewan.classList.add('hidden');
+      pagePlanning.classList.add('hidden');
+
+      btnJamiyati.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white transition-all";
+      btnDewan.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white transition-all";
+      btnPlanning.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm text-slate-400 hover:text-white transition-all";
+
+      ambientContainer.className = `ambient-3d-backdrop theme-${tab}`;
+      mainHeader.className = `sticky top-0 z-40 border-b header-${tab} backdrop-blur-md px-3 sm:px-6 py-3`;
+
+      if (tab === 'jamiyati') {
+        pageJamiyati.classList.remove('hidden');
+        btnJamiyati.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm bg-emerald-500 text-white btn-3d";
+        if (!systemConfig.headerLogoUrl) logoIcon.innerHTML = `<i id="logo-icon-svg" data-lucide="wallet-cards" class="w-5 h-5"></i>`;
+        paletteIcon.className = "w-4 h-4 text-emerald-400 transition-colors duration-300";
+        backupIcon.className = "w-4 h-4 text-emerald-400 transition-colors duration-300";
+
+        ctaContainer.innerHTML = `
+          <button onclick="openAddJam3eyaModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-emerald-500 hover:bg-emerald-600 text-white text-xs sm:text-sm font-bold btn-3d">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>جمعية جديدة</span>
+          </button>
+        `;
+      } else if (tab === 'dewan') {
+        pageDewan.classList.remove('hidden');
+        btnDewan.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm bg-sky-500 text-white btn-3d";
+        if (!systemConfig.headerLogoUrl) logoIcon.innerHTML = `<i id="logo-icon-svg" data-lucide="scale" class="w-5 h-5"></i>`;
+        paletteIcon.className = "w-4 h-4 text-sky-400 transition-colors duration-300";
+        backupIcon.className = "w-4 h-4 text-sky-400 transition-colors duration-300";
+
+        ctaContainer.innerHTML = `
+          <button onclick="openAddDebtModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-sky-500 hover:bg-sky-600 text-white text-xs sm:text-sm font-bold btn-3d">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>معاملة جديدة</span>
+          </button>
+        `;
+      } else if (tab === 'planning') {
+        pagePlanning.classList.remove('hidden');
+        btnPlanning.className = "flex items-center gap-1.5 px-3 py-1.5 rounded-xl font-bold text-xs sm:text-sm bg-purple-600 text-white btn-3d";
+        if (!systemConfig.headerLogoUrl) logoIcon.innerHTML = `<i id="logo-icon-svg" data-lucide="target" class="w-5 h-5"></i>`;
+        paletteIcon.className = "w-4 h-4 text-purple-400 transition-colors duration-300";
+        backupIcon.className = "w-4 h-4 text-purple-400 transition-colors duration-300";
+
+        ctaContainer.innerHTML = `
+          <button onclick="openAddPlanModal()" class="flex items-center gap-1.5 px-3.5 py-2 rounded-xl bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm font-bold btn-3d">
+            <i data-lucide="plus-circle" class="w-4 h-4"></i>
+            <span>هدف جديد</span>
+          </button>
+        `;
+      }
+
+      renderUnifiedUI();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function triggerToast(msg) {
+      const toast = document.getElementById('app-toast');
+      document.getElementById('toast-text').innerText = msg;
+      toast.classList.remove('translate-y-24', 'opacity-0', 'pointer-events-none');
+      setTimeout(() => {
+        toast.classList.add('translate-y-24', 'opacity-0', 'pointer-events-none');
+      }, 3000);
+    }
+
+    function openModal(id) {
+      document.getElementById(id).classList.remove('hidden');
+      if (id === 'cash-modal') {
+        document.getElementById('input-cash').value = (state.availableCash !== undefined && state.availableCash !== 0) ? state.availableCash : '';
+      }
+      if (id === 'admin-modal') renderAdminDashboard();
+      if (id === 'branding-modal') applyBrandingToUI();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.add('hidden');
+    }
+
+    function saveAvailableCash() {
+      state.availableCash = parseFloat(document.getElementById('input-cash').value) || 0;
+      saveAppState();
+      closeModal('cash-modal');
+      triggerToast('تم الحفظ بنجاح');
+    }
+
+    function autoCalculateInstallment() {
+      const total = parseFloat(document.getElementById('form-total').value) || 0;
+      const cycles = parseInt(document.getElementById('form-cycles').value, 10) || 0;
+      if (total > 0 && cycles > 0) {
+        document.getElementById('form-installment').value = Math.round(total / cycles);
+      }
+    }
+
+    function syncFreqLabels() {
+      const freq = document.getElementById('form-freq').value;
+      const lblCycles = document.getElementById('lbl-cycles');
+      const lblPayout = document.getElementById('lbl-payout-cycle');
+
+      if (freq === 'monthly') {
+        lblCycles.innerText = "إجمالي عدد الأقساط *";
+        lblPayout.innerText = "دورك في القبض *";
+      } else {
+        lblCycles.innerText = "إجمالي عدد الأدوار *";
+        lblPayout.innerText = "الدور في القبض *";
+      }
+      autoCalculateInstallment();
+    }
+
+    function calculateRoscaSchedule(rosca) {
+      const schedule = [];
+      const totalCycles = parseInt(rosca.cycles, 10) || 1;
+      const freq = rosca.frequency || 'monthly';
+      const [sYear, sMonth, sDay] = (rosca.startDate || getTodayKey()).split('-').map(Number);
+
+      for (let i = 0; i < totalCycles; i++) {
+        let cycleDate;
+        if (freq === 'monthly') {
+          cycleDate = new Date(sYear, sMonth - 1, 1);
+          cycleDate.setMonth(cycleDate.getMonth() + i);
+          const maxDays = new Date(cycleDate.getFullYear(), cycleDate.getMonth() + 1, 0).getDate();
+          cycleDate.setDate(Math.min(sDay, maxDays));
+        } else if (freq === 'every_10_days') {
+          cycleDate = new Date(sYear, sMonth - 1, sDay);
+          cycleDate.setDate(cycleDate.getDate() + (i * 10));
+        } else if (freq === 'every_15_days') {
+          cycleDate = new Date(sYear, sMonth - 1, sDay);
+          cycleDate.setDate(cycleDate.getDate() + (i * 15));
+        } else if (freq === 'weekly') {
+          cycleDate = new Date(sYear, sMonth - 1, sDay);
+          cycleDate.setDate(cycleDate.getDate() + (i * 7));
+        } else {
+          cycleDate = new Date(sYear, sMonth - 1, sDay);
+          cycleDate.setDate(cycleDate.getDate() + i);
+        }
+
+        const y = cycleDate.getFullYear();
+        const m = String(cycleDate.getMonth() + 1).padStart(2, '0');
+        const d = String(cycleDate.getDate()).padStart(2, '0');
+        const dateKey = `${y}-${m}-${d}`;
+
+        schedule.push({
+          cycleIndex: i + 1,
+          date: cycleDate,
+          dateKey: dateKey,
+          isPayout: (i + 1) === (parseInt(rosca.payoutCycle, 10) || 1),
+          isPaid: (i + 1) <= (parseInt(rosca.paidCycles, 10) || 0)
+        });
+      }
+      return schedule;
+    }
+
+    function renderJamiyatiKPIs() {
+      document.getElementById('kpi-cash').innerText = (state.availableCash || 0).toLocaleString('ar-EG');
+      let totalWealth = 0;
+      let monthlyEstimatedCommitment = 0;
+      let totalPaid = 0;
+      let totalTarget = 0;
+
+      state.roscas.forEach(r => {
+        const val = parseFloat(r.total) || 0;
+        const inst = parseFloat(r.installment) || 0;
+        const cycles = parseInt(r.cycles) || 1;
+        const paid = parseInt(r.paidCycles) || 0;
+        const freq = r.frequency || 'monthly';
+
+        totalWealth += val;
+        totalPaid += (inst * paid);
+        totalTarget += (inst * cycles);
+
+        if (freq === 'monthly') monthlyEstimatedCommitment += inst;
+        else if (freq === 'every_10_days') monthlyEstimatedCommitment += (inst * 3);
+        else if (freq === 'every_15_days') monthlyEstimatedCommitment += (inst * 2);
+        else if (freq === 'weekly') monthlyEstimatedCommitment += (inst * 4.3);
+        else if (freq === 'daily') monthlyEstimatedCommitment += (inst * 30);
+      });
+
+      document.getElementById('kpi-total-wealth').innerText = totalWealth.toLocaleString('ar-EG');
+      document.getElementById('kpi-roscas-count').innerHTML = `<i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-indigo-400"></i> ${state.roscas.length} جمعيات نشطة`;
+      document.getElementById('kpi-monthly-dues').innerText = Math.round(monthlyEstimatedCommitment).toLocaleString('ar-EG');
+      document.getElementById('kpi-paid-sum').innerText = totalPaid.toLocaleString('ar-EG');
+
+      const pct = totalTarget > 0 ? Math.min(100, Math.round((totalPaid / totalTarget) * 100)) : 0;
+      document.getElementById('kpi-progress-pct').innerText = `${pct}%`;
+      document.getElementById('kpi-progress-bar').style.width = `${pct}%`;
+    }
+
+    function renderRoscasList() {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      const container = document.getElementById('roscas-list');
+      container.innerHTML = '';
+
+      if (state.roscas.length === 0) {
+        container.innerHTML = `<div class="box-3d p-8 text-center border-dashed border border-slate-800"><i data-lucide="folder-plus" class="w-10 h-10 text-slate-500 mx-auto mb-2"></i><p class="text-sm font-bold text-slate-300">لا توجد جمعيات مسجلة حالياً</p></div>`;
+        return;
+      }
+
+      const todayStr = getTodayKey();
+
+      state.roscas.forEach((item) => {
+        const paid = parseInt(item.paidCycles) || 0;
+        const cycles = parseInt(item.cycles) || 1;
+        const progress = Math.min(100, Math.round((paid / cycles) * 100));
+        const remainingDues = Math.max(0, (cycles - paid) * (parseFloat(item.installment) || 0));
+
+        const schedule = calculateRoscaSchedule(item);
+        const nextUnpaid = schedule.find(s => !s.isPaid);
+        const payoutScheduleItem = schedule.find(s => s.isPayout);
+
+        let canPay = nextUnpaid ? (todayStr >= nextUnpaid.dateKey) : false;
+        let canPayout = payoutScheduleItem ? (todayStr >= payoutScheduleItem.dateKey) : false;
+
+        const card = document.createElement('div');
+        card.className = "box-3d p-4 sm:p-5 relative border-r-4 flex flex-col justify-between";
+        card.style.borderRightColor = item.color || '#10b981';
+
+        card.innerHTML = `
+          <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-base font-extrabold text-white">${item.name}</h3>
+                ${item.payoutStatus === 'collected' ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">تم الاستلام</span>' : '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-300 border border-amber-500/30">قيد الانتظار</span>'}
+              </div>
+
+              <div class="flex items-center gap-1.5 self-end sm:self-auto flex-wrap">
+                <button onclick="openScheduleModal('${item.id}')" class="px-2.5 py-1.5 rounded-xl sunken-3d text-slate-300 text-xs font-bold transition flex items-center gap-1 btn-3d"><i data-lucide="list-ordered" class="w-3.5 h-3.5 text-indigo-400"></i><span>الجدول</span></button>
+                ${nextUnpaid ? `
+                  <button onclick="triggerPayModal('${item.id}')" class="px-3 py-1.5 rounded-xl text-xs font-bold transition flex items-center gap-1 btn-3d ${canPay ? 'bg-emerald-500 hover:bg-emerald-600 text-white cursor-pointer' : 'bg-slate-900 text-slate-500 border border-slate-800'}">
+                    <i data-lucide="${canPay ? 'check' : 'lock'}" class="w-3.5 h-3.5"></i>
+                    <span>${canPay ? 'سداد قسط' : 'مغلق'}</span>
+                  </button>
+                ` : `<span class="px-3 py-1.5 rounded-xl bg-emerald-500/10 text-emerald-400 text-xs font-bold border border-emerald-500/20">مسددة</span>`}
+                <button onclick="triggerPayoutModal('${item.id}')" class="p-2 rounded-xl border transition btn-3d ${item.payoutStatus === 'collected' ? 'bg-indigo-600 text-white border-indigo-500' : (canPayout ? 'sunken-3d hover:bg-indigo-500/20 text-indigo-400 border-slate-700' : 'bg-slate-900 text-slate-600 border-slate-800')}"><i data-lucide="hand-coins" class="w-4 h-4"></i></button>
+                <button onclick="openAddJam3eyaModal('${item.id}')" class="p-2 rounded-xl sunken-3d text-slate-300 btn-3d"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                <button onclick="removeRosca('${item.id}')" class="p-2 rounded-xl sunken-3d text-slate-400 hover:text-rose-400 btn-3d"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 py-3 border-y border-slate-800 text-xs">
+              <div><span class="text-slate-400 block text-[10px]">مبلغ القبض:</span><span class="font-extrabold text-white text-sm">${parseFloat(item.total).toLocaleString('ar-EG')} ${cur}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">القسط الدوري:</span><span class="font-bold text-emerald-400 text-sm">${parseFloat(item.installment).toLocaleString('ar-EG')} ${cur}</span></div>
+              <div class="bg-indigo-950/30 p-1.5 rounded-xl border border-indigo-900/40"><span class="text-indigo-300 block text-[10px] font-bold">تاريخ القبض:</span><span class="font-black text-indigo-200 text-xs block">${payoutScheduleItem ? payoutScheduleItem.dateKey : 'غير محدد'}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">المتبقي:</span><span class="font-bold text-amber-300 text-sm">${remainingDues.toLocaleString('ar-EG')} ${cur}</span></div>
+            </div>
+
+            <div class="mt-3 flex items-center justify-between gap-2 text-[11px]"><span class="text-slate-400">سددت ${paid} من ${cycles}</span><span class="font-bold text-emerald-400">${progress}%</span></div>
+          </div>
+          <div class="w-full sunken-3d rounded-full h-1.5 mt-3 overflow-hidden"><div class="h-full rounded-full transition-all duration-300" style="width: ${progress}%; background-color: ${item.color || '#10b981'}"></div></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderCalendarMatrix() {
+      const year = calDate.getFullYear();
+      const month = calDate.getMonth();
+      const arabicMonths = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+      document.getElementById('cal-month-name').innerText = `${arabicMonths[month]} ${year}`;
+
+      const cells = document.getElementById('calendar-cells');
+      cells.innerHTML = '';
+
+      const firstDay = new Date(year, month, 1);
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const startDay = firstDay.getDay();
+      const emptyLead = (startDay + 1) % 7;
+
+      for (let i = 0; i < emptyLead; i++) {
+        const empty = document.createElement('div');
+        empty.className = "h-16 sm:h-20 rounded-xl bg-slate-900/30 border border-slate-800/30";
+        cells.appendChild(empty);
+      }
+
+      const monthScheduleMap = {};
+      state.roscas.forEach(rosca => {
+        const schedules = calculateRoscaSchedule(rosca);
+        schedules.forEach(item => {
+          if (!monthScheduleMap[item.dateKey]) monthScheduleMap[item.dateKey] = { dues: [], payouts: [] };
+          monthScheduleMap[item.dateKey].dues.push({ rosca, cycleIndex: item.cycleIndex, isPaid: item.isPaid });
+          if (item.isPayout) monthScheduleMap[item.dateKey].payouts.push({ rosca, cycleIndex: item.cycleIndex });
+        });
+      });
+
+      const todayStr = getTodayKey();
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const isToday = (todayStr === dateKey);
+        const dayData = monthScheduleMap[dateKey] || { dues: [], payouts: [] };
+        const hasNote = !!(state.notes && state.notes[dateKey]);
+
+        const dayCell = document.createElement('div');
+        dayCell.className = `cal-cell h-16 sm:h-20 rounded-xl p-1 flex flex-col justify-between cursor-pointer transition relative overflow-hidden ${isToday ? 'today-cell-active' : ''}`;
+        dayCell.onclick = () => openDayCard(dateKey, day, dayData.dues, dayData.payouts);
+
+        dayCell.innerHTML = `
+          <div class="flex items-center justify-between"><span class="text-[10px] sm:text-xs font-black ${isToday ? 'text-white px-1.5 py-0.5 rounded-lg bg-emerald-600' : 'text-slate-300'}">${day}</span>${hasNote ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>' : ''}</div>
+          <div class="space-y-0.5 overflow-hidden my-0.5">
+            ${dayData.payouts.map(p => `<div class="text-[8px] sm:text-[9px] px-1 py-0.5 rounded truncate bg-indigo-600 text-white font-black">قبض ${p.rosca.name}</div>`).join('')}
+            ${dayData.dues.map(d => `<div class="text-[8px] px-1 py-0.5 rounded truncate text-white ${d.isPaid ? 'opacity-60 line-through' : 'font-bold'}" style="background-color: ${d.rosca.color || '#10b981'}">قسط ${parseFloat(d.rosca.installment).toLocaleString('ar-EG')}</div>`).join('')}
+          </div>
+        `;
+        cells.appendChild(dayCell);
+      }
+    }
+
+    function stepMonth(delta) { calDate.setMonth(calDate.getMonth() + delta); renderCalendarMatrix(); }
+    function jumpToToday() { calDate = new Date(); renderCalendarMatrix(); }
+
+    function openDayCard(dateKey, dayNum, dues, payouts) {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      currentSelectedDateKey = dateKey;
+      const card = document.getElementById('day-notes-card');
+      card.classList.remove('hidden');
+      document.getElementById('selected-day-title').innerText = `تفاصيل يوم ${dayNum} (${dateKey})`;
+
+      const list = document.getElementById('selected-day-items');
+      list.innerHTML = '';
+
+      if (dues.length === 0 && payouts.length === 0) {
+        list.innerHTML = `<div class="text-xs text-slate-400 p-2 rounded-xl sunken-3d">لا توجد مواعيد في هذا اليوم</div>`;
+      } else {
+        payouts.forEach(p => {
+          list.innerHTML += `<div class="flex items-center justify-between p-2 rounded-xl bg-indigo-950/60 border border-indigo-700/50 text-xs"><span class="text-indigo-200 font-bold">موعد قبض: ${p.rosca.name}</span><span class="font-extrabold text-indigo-300">${parseFloat(p.rosca.total).toLocaleString('ar-EG')} ${cur}</span></div>`;
+        });
+        dues.forEach(d => {
+          list.innerHTML += `<div class="flex items-center justify-between p-2 rounded-xl sunken-3d text-xs"><span class="text-slate-200">${d.rosca.name}</span><span class="font-bold text-emerald-400">${parseFloat(d.rosca.installment).toLocaleString('ar-EG')} ${cur}</span></div>`;
+        });
+      }
+      document.getElementById('day-note-text').value = (state.notes && state.notes[dateKey]) || '';
+    }
+
+    function closeDayCard() { document.getElementById('day-notes-card').classList.add('hidden'); }
+    function saveDayNote() {
+      if (!currentSelectedDateKey) return;
+      const val = document.getElementById('day-note-text').value.trim();
+      if (!state.notes) state.notes = {};
+      if (val) state.notes[currentSelectedDateKey] = val;
+      else delete state.notes[currentSelectedDateKey];
+      saveAppState();
+      triggerToast('تم الحفظ بنجاح');
+    }
+
+    function openAddJam3eyaModal(editId = null) {
+      const form = document.getElementById('rosca-form');
+      form.reset();
+      document.getElementById('form-rosca-id').value = '';
+
+      if (editId) {
+        const item = state.roscas.find(r => r.id === editId);
+        if (item) {
+          document.getElementById('form-rosca-id').value = item.id;
+          document.getElementById('form-name').value = item.name;
+          document.getElementById('form-total').value = item.total;
+          document.getElementById('form-freq').value = item.frequency || 'monthly';
+          document.getElementById('form-installment').value = item.installment;
+          document.getElementById('form-cycles').value = item.cycles;
+          document.getElementById('form-start-date').value = item.startDate;
+          document.getElementById('form-payout-cycle').value = item.payoutCycle;
+          document.getElementById('form-payout-status').value = item.payoutStatus;
+          document.getElementById('form-paid-cycles').value = item.paidCycles || '';
+          document.getElementById('form-color').value = item.color || '#10b981';
+        }
+      } else {
+        document.getElementById('form-start-date').value = getTodayKey();
+        document.getElementById('form-cycles').value = '';
+        document.getElementById('form-payout-cycle').value = '';
+        document.getElementById('form-paid-cycles').value = '';
+        document.getElementById('form-color').value = '#10b981';
+      }
+      syncFreqLabels();
+      openModal('add-jam3eya-modal');
+    }
+
+    function handleSaveRosca(e) {
+      e.preventDefault();
+      const editId = document.getElementById('form-rosca-id').value;
+      const data = {
+        name: document.getElementById('form-name').value.trim(),
+        total: parseFloat(document.getElementById('form-total').value) || 0,
+        frequency: document.getElementById('form-freq').value,
+        installment: parseFloat(document.getElementById('form-installment').value) || 0,
+        cycles: parseInt(document.getElementById('form-cycles').value, 10) || 1,
+        startDate: document.getElementById('form-start-date').value,
+        payoutCycle: parseInt(document.getElementById('form-payout-cycle').value, 10) || 1,
+        payoutStatus: document.getElementById('form-payout-status').value,
+        paidCycles: parseInt(document.getElementById('form-paid-cycles').value, 10) || 0,
+        color: document.getElementById('form-color').value
+      };
+
+      if (editId) {
+        const idx = state.roscas.findIndex(r => r.id === editId);
+        if (idx !== -1) state.roscas[idx] = { ...state.roscas[idx], ...data };
+      } else {
+        state.roscas.push({ id: 'rosca_' + Date.now(), ...data, paymentHistory: [] });
+      }
+
+      closeModal('add-jam3eya-modal');
+      saveAppState();
+    }
+
+    async function removeRosca(id) {
+      const confirmed = await showSystemConfirm('هل أنت متأكد من حذف هذه الجمعية وسجلاتها نهائياً؟', 'حذف الجمعية', true);
+      if (confirmed) {
+        state.roscas = state.roscas.filter(r => r.id !== id);
+        saveAppState();
+        triggerToast('تم حذف الجمعية');
+      }
+    }
+
+    async function triggerPayModal(id) {
+      const item = state.roscas.find(r => r.id === id);
+      if (!item) return;
+
+      const schedule = calculateRoscaSchedule(item);
+      const nextUnpaid = schedule.find(s => !s.isPaid);
+      const todayStr = getTodayKey();
+
+      if (nextUnpaid && todayStr < nextUnpaid.dateKey) {
+        await showSystemAlert(`هذا القسط مغلق حالياً. لا يمكنك تسجيل السداد إلا عند حلول تاريخ الاستحقاق المحدد (${formatReadableDate(nextUnpaid.dateKey)}).`, 'warning', 'القسط مغلق');
+        return;
+      }
+
+      document.getElementById('pay-rosca-id').value = item.id;
+      document.getElementById('pay-cycle-index').value = nextUnpaid.cycleIndex;
+      document.getElementById('pay-rosca-name').innerText = item.name;
+      document.getElementById('pay-cycle-label').innerText = `القسط رقم (${nextUnpaid.cycleIndex})`;
+      document.getElementById('pay-amount-label').innerText = `${parseFloat(item.installment).toLocaleString('ar-EG')} ${systemConfig.currencySymbol || 'ج.م'}`;
+      document.getElementById('pay-scheduled-date').value = nextUnpaid.dateKey;
+      document.getElementById('pay-actual-date').value = todayStr;
+      document.getElementById('pay-ref').value = '';
+      document.getElementById('pay-deduct-cash').checked = false;
+
+      openModal('payment-modal');
+    }
+
+    function handleConfirmPayment(e) {
+      e.preventDefault();
+      const roscaId = document.getElementById('pay-rosca-id').value;
+      const cycleIndex = parseInt(document.getElementById('pay-cycle-index').value, 10);
+      const scheduledDate = document.getElementById('pay-scheduled-date').value;
+      const actualDate = document.getElementById('pay-actual-date').value;
+      const method = document.getElementById('pay-method').value;
+      const ref = document.getElementById('pay-ref').value.trim();
+      const deduct = document.getElementById('pay-deduct-cash').checked;
+
+      const item = state.roscas.find(r => r.id === roscaId);
+      if (!item) return;
+      if (!item.paymentHistory) item.paymentHistory = [];
+
+      item.paidCycles = cycleIndex;
+      item.paymentHistory.push({ cycleIndex, scheduledDate, actualDate, method, ref, amount: parseFloat(item.installment) });
+
+      if (deduct) {
+        state.availableCash = Math.max(0, (state.availableCash || 0) - parseFloat(item.installment));
+      }
+
+      closeModal('payment-modal');
+      saveAppState();
+    }
+
+    async function triggerPayoutModal(id) {
+      const item = state.roscas.find(r => r.id === id);
+      if (!item) return;
+
+      const schedule = calculateRoscaSchedule(item);
+      const payoutItem = schedule.find(s => s.isPayout);
+      const todayStr = getTodayKey();
+
+      if (payoutItem && todayStr < payoutItem.dateKey && item.payoutStatus !== 'collected') {
+        await showSystemAlert(`لم يحن موعد استلام هذه الجمعية بعد وفقاً لجدول الأدوار. الموعد المحدد هو (${formatReadableDate(payoutItem.dateKey)}).`, 'warning', 'موعد القبض لم يحن');
+        return;
+      }
+
+      document.getElementById('payout-rosca-id').value = item.id;
+      document.getElementById('payout-modal-name').innerText = item.name;
+      document.getElementById('payout-modal-amount').innerText = `${parseFloat(item.total).toLocaleString('ar-EG')} ${systemConfig.currencySymbol || 'ج.م'}`;
+      document.getElementById('payout-modal-cycle').innerText = `الدور رقم (${item.payoutCycle})`;
+      document.getElementById('payout-scheduled-date').value = payoutItem ? payoutItem.dateKey : '';
+      document.getElementById('payout-actual-date').value = todayStr;
+      document.getElementById('payout-add-cash').checked = false;
+
+      openModal('payout-modal');
+    }
+
+    function handleConfirmPayout(e) {
+      e.preventDefault();
+      const roscaId = document.getElementById('payout-rosca-id').value;
+      const item = state.roscas.find(r => r.id === roscaId);
+      if (!item) return;
+
+      item.payoutStatus = 'collected';
+      if (document.getElementById('payout-add-cash').checked) {
+        state.availableCash = (state.availableCash || 0) + parseFloat(item.total);
+      }
+
+      closeModal('payout-modal');
+      saveAppState();
+    }
+
+    function openScheduleModal(id) {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      const item = state.roscas.find(r => r.id === id);
+      if (!item) return;
+
+      document.getElementById('schedule-title').innerHTML = `جدول أقساط: ${item.name}`;
+      document.getElementById('schedule-subtitle').innerText = `القسط: ${parseFloat(item.installment).toLocaleString('ar-EG')} ${cur}`;
+
+      const container = document.getElementById('schedule-table-container');
+      container.innerHTML = '';
+
+      const schedule = calculateRoscaSchedule(item);
+      const history = item.paymentHistory || [];
+      const todayStr = getTodayKey();
+
+      schedule.forEach(s => {
+        const hist = history.find(h => h.cycleIndex === s.cycleIndex);
+        const isNextEligible = !s.isPaid && s.cycleIndex === (parseInt(item.paidCycles, 10) + 1);
+        const canPayThis = isNextEligible && (todayStr >= s.dateKey);
+
+        const row = document.createElement('div');
+        row.className = "p-3 rounded-xl border flex flex-wrap items-center justify-between gap-2 transition sunken-3d";
+
+        if (s.isPaid) {
+          row.className += " border-emerald-500/30 bg-emerald-950/20";
+          row.innerHTML = `<span class="font-bold text-white">قسط (${s.cycleIndex}) مسدد - ${formatReadableDate(s.dateKey)}</span><button onclick="revertPayment('${item.id}', ${s.cycleIndex})" class="text-rose-400 text-xs p-1">تراجع</button>`;
+        } else if (isNextEligible) {
+          row.className += canPayThis ? " border-amber-500/40 bg-amber-950/20" : " border-slate-700 bg-slate-900";
+          row.innerHTML = `<span class="font-bold text-white">القسط القادم (${s.cycleIndex}) - ${formatReadableDate(s.dateKey)}</span>${canPayThis ? `<button onclick="closeModal('schedule-modal'); triggerPayModal('${item.id}');" class="px-3 py-1 rounded-lg bg-emerald-500 text-white font-bold text-xs btn-3d">سداد</button>` : `<span class="text-slate-400 text-xs">مغلق</span>`}`;
+        } else {
+          row.className += " border-slate-800 bg-slate-950/60 opacity-60";
+          row.innerHTML = `<span class="text-slate-400">قسط (${s.cycleIndex}) - ${formatReadableDate(s.dateKey)}</span>`;
+        }
+        container.appendChild(row);
+      });
+
+      openModal('schedule-modal');
+    }
+
+    async function revertPayment(roscaId, cycleIndex) {
+      const item = state.roscas.find(r => r.id === roscaId);
+      if (!item || cycleIndex !== parseInt(item.paidCycles, 10)) return;
+
+      const confirmed = await showSystemConfirm(`هل أنت متأكد من التراجع عن سداد القسط رقم (${cycleIndex})؟`, 'تراجع عن السداد', true);
+      if (confirmed) {
+        item.paidCycles = Math.max(0, cycleIndex - 1);
+        if (item.paymentHistory) item.paymentHistory = item.paymentHistory.filter(h => h.cycleIndex !== cycleIndex);
+        state.availableCash = (state.availableCash || 0) + parseFloat(item.installment);
+        saveAppState();
+        openScheduleModal(roscaId);
+        triggerToast('تم التراجع عن السداد بنجاح');
+      }
+    }
+
+    function setDewanFilter(filter) {
+      dewanFilter = filter;
+      ['all', 'rec', 'pay'].forEach(k => {
+        const el = document.getElementById(`btn-filter-${k}`);
+        if (el) el.className = 'px-3 py-1 rounded-lg text-slate-400 hover:text-white transition';
+      });
+
+      if (filter === 'all') document.getElementById('btn-filter-all').className = 'px-3 py-1 rounded-lg font-bold bg-sky-500 text-white btn-3d';
+      if (filter === 'receivable') document.getElementById('btn-filter-rec').className = 'px-3 py-1 rounded-lg font-bold bg-emerald-500 text-white btn-3d';
+      if (filter === 'payable') document.getElementById('btn-filter-pay').className = 'px-3 py-1 rounded-lg font-bold bg-rose-500 text-white btn-3d';
+
+      renderDebtsList();
+    }
+
+    function renderDewanKPIs() {
+      let receivable = 0;
+      let payable = 0;
+      let totalSettled = 0;
+      let totalAll = 0;
+
+      state.debts.forEach(d => {
+        const rem = Math.max(0, parseFloat(d.total) - parseFloat(d.paid));
+        totalSettled += parseFloat(d.paid);
+        totalAll += parseFloat(d.total);
+
+        if (d.type === 'receivable') receivable += rem;
+        else payable += rem;
+      });
+
+      const net = receivable - payable;
+      const netEl = document.getElementById('kpi-net-balance');
+      netEl.innerText = (net >= 0 ? '+' : '') + net.toLocaleString('ar-EG');
+      netEl.className = `text-3xl font-black tracking-tight ${net >= 0 ? 'text-emerald-400' : 'text-rose-400'}`;
+
+      document.getElementById('kpi-receivable').innerText = receivable.toLocaleString('ar-EG');
+      document.getElementById('kpi-payable').innerText = payable.toLocaleString('ar-EG');
+
+      const pct = totalAll > 0 ? Math.min(100, Math.round((totalSettled / totalAll) * 100)) : 0;
+      document.getElementById('kpi-settled-pct').innerText = `${pct}%`;
+      document.getElementById('kpi-settled-sum').innerText = totalSettled.toLocaleString('ar-EG');
+      document.getElementById('kpi-settled-bar').style.width = `${pct}%`;
+    }
+
+    function renderDebtsList() {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      const container = document.getElementById('debts-list');
+      container.innerHTML = '';
+
+      let list = state.debts;
+      if (dewanFilter !== 'all') list = list.filter(d => d.type === dewanFilter);
+
+      if (list.length === 0) {
+        container.innerHTML = `<div class="box-3d p-8 text-center border-dashed border border-slate-800"><i data-lucide="inbox" class="w-10 h-10 text-slate-500 mx-auto mb-2"></i><p class="text-sm font-bold text-slate-300">لا توجد معاملات مسجلة</p></div>`;
+        return;
+      }
+
+      list.forEach(item => {
+        const total = parseFloat(item.total);
+        const paid = parseFloat(item.paid);
+        const rem = Math.max(0, total - paid);
+        const isCompleted = rem <= 0;
+        const isReceivable = (item.type === 'receivable');
+
+        const card = document.createElement('div');
+        card.className = `box-3d p-4 sm:p-5 relative border-r-4 flex flex-col justify-between`;
+        card.style.borderRightColor = item.color || (isReceivable ? '#10b981' : '#f43f5e');
+
+        card.innerHTML = `
+          <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+              <div>
+                <h3 class="text-base font-extrabold text-white">${item.person}</h3>
+                <span class="text-[10px] font-bold ${isReceivable ? 'text-emerald-400' : 'text-rose-400'}">${isReceivable ? 'أموال لك (مستحقات)' : 'أموال عليك (التزامات)'}</span>
+              </div>
+
+              <div class="flex items-center gap-1.5 self-end sm:self-auto flex-wrap">
+                <button onclick="openDebtHistoryModal('${item.id}')" class="px-2.5 py-1.5 rounded-xl sunken-3d text-slate-300 text-xs font-bold btn-3d">السجل</button>
+                ${!isCompleted ? `<button onclick="openSettleDebtModal('${item.id}')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-sky-500 text-white btn-3d">سداد</button>` : ''}
+                <button onclick="openAddDebtModal('${item.id}')" class="p-2 rounded-xl sunken-3d text-slate-300 btn-3d"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                <button onclick="removeDebt('${item.id}')" class="p-2 rounded-xl sunken-3d text-slate-400 hover:text-rose-400 btn-3d"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 py-3 border-y border-slate-800 text-xs">
+              <div><span class="text-slate-400 block text-[10px]">المبلغ الإجمالي:</span><span class="font-extrabold text-white text-sm">${total.toLocaleString('ar-EG')} ${cur}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">المسدد:</span><span class="font-bold text-sky-400 text-sm">${paid.toLocaleString('ar-EG')} ${cur}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">المتبقي:</span><span class="font-black text-sm ${isReceivable ? 'text-emerald-400' : 'text-rose-400'}">${rem.toLocaleString('ar-EG')} ${cur}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">الاستحقاق:</span><span class="font-bold text-slate-200 text-xs">${item.dueDate}</span></div>
+            </div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderDewanCalendar() {
+      const year = calDateDewan.getFullYear();
+      const month = calDateDewan.getMonth();
+      const arabicMonths = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+      document.getElementById('cal-month-name-dewan').innerText = `${arabicMonths[month]} ${year}`;
+
+      const cells = document.getElementById('calendar-cells-dewan');
+      cells.innerHTML = '';
+
+      const firstDay = new Date(year, month, 1);
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const startDay = firstDay.getDay();
+      const emptyLead = (startDay + 1) % 7;
+
+      for (let i = 0; i < emptyLead; i++) {
+        const empty = document.createElement('div');
+        empty.className = "h-16 sm:h-20 rounded-xl bg-slate-900/30 border border-slate-800/30";
+        cells.appendChild(empty);
+      }
+
+      const duesMap = {};
+      state.debts.forEach(d => {
+        if (!duesMap[d.dueDate]) duesMap[d.dueDate] = [];
+        duesMap[d.dueDate].push(d);
+      });
+
+      const todayStr = getTodayKey();
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const isToday = (todayStr === dateKey);
+        const dayDebts = duesMap[dateKey] || [];
+        const hasNote = !!(state.dewanNotes && state.dewanNotes[dateKey]);
+
+        const dayCell = document.createElement('div');
+        dayCell.className = `cal-cell h-16 sm:h-20 rounded-xl p-1 flex flex-col justify-between cursor-pointer transition relative overflow-hidden ${isToday ? 'today-cell-dewan' : ''}`;
+        dayCell.onclick = () => openDayCardDewan(dateKey, day, dayDebts);
+
+        dayCell.innerHTML = `
+          <div class="flex items-center justify-between"><span class="text-[10px] sm:text-xs font-black ${isToday ? 'text-white px-1.5 py-0.5 rounded-lg bg-sky-600' : 'text-slate-300'}">${day}</span>${hasNote ? '<span class="w-1.5 h-1.5 rounded-full bg-amber-400"></span>' : ''}</div>
+          <div class="space-y-0.5 overflow-hidden my-0.5">
+            ${dayDebts.map(d => `<div class="text-[8px] px-1 py-0.5 rounded truncate text-white font-bold" style="background-color: ${d.color || (d.type === 'receivable' ? '#059669' : '#e11d48')}">${d.type === 'receivable' ? 'لي:' : 'علي:'} ${d.person}</div>`).join('')}
+          </div>
+        `;
+        cells.appendChild(dayCell);
+      }
+    }
+
+    function stepMonthDewan(delta) { calDateDewan.setMonth(calDateDewan.getMonth() + delta); renderDewanCalendar(); }
+    function jumpToTodayDewan() { calDateDewan = new Date(); renderDewanCalendar(); }
+
+    function openDayCardDewan(dateKey, dayNum, dayDebts) {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      currentSelectedDateKeyDewan = dateKey;
+      const card = document.getElementById('day-notes-card-dewan');
+      card.classList.remove('hidden');
+      document.getElementById('selected-day-title-dewan').innerText = `تفاصيل يوم ${dayNum} (${dateKey})`;
+
+      const list = document.getElementById('selected-day-items-dewan');
+      list.innerHTML = '';
+
+      if (!dayDebts || dayDebts.length === 0) {
+        list.innerHTML = `<div class="text-xs text-slate-400 p-2 rounded-xl sunken-3d">لا توجد استحقاقات في هذا اليوم</div>`;
+      } else {
+        dayDebts.forEach(d => {
+          const isRec = d.type === 'receivable';
+          list.innerHTML += `<div class="flex items-center justify-between p-2 rounded-xl border text-xs ${isRec ? 'bg-emerald-950/40 border-emerald-800/40' : 'bg-rose-950/40 border-rose-800/40'}"><span class="font-bold text-white">${isRec ? 'مستحق من:' : 'التزام لصالح:'} ${d.person}</span><span class="font-black ${isRec ? 'text-emerald-400' : 'text-rose-400'}">${(parseFloat(d.total) - parseFloat(d.paid)).toLocaleString('ar-EG')} ${cur}</span></div>`;
+        });
+      }
+
+      document.getElementById('day-note-text-dewan').value = (state.dewanNotes && state.dewanNotes[dateKey]) || '';
+    }
+
+    function closeDayCardDewan() { document.getElementById('day-notes-card-dewan').classList.add('hidden'); }
+    function saveDayNoteDewan() {
+      if (!currentSelectedDateKeyDewan) return;
+      const val = document.getElementById('day-note-text-dewan').value.trim();
+      if (!state.dewanNotes) state.dewanNotes = {};
+      if (val) state.dewanNotes[currentSelectedDateKeyDewan] = val;
+      else delete state.dewanNotes[currentSelectedDateKeyDewan];
+      saveAppState();
+      triggerToast('تم الحفظ بنجاح');
+    }
+
+    function openAddDebtModal(editId = null) {
+      const form = document.getElementById('debt-form');
+      form.reset();
+      document.getElementById('form-debt-id').value = '';
+
+      if (editId) {
+        const item = state.debts.find(d => d.id === editId);
+        if (item) {
+          document.getElementById('form-debt-id').value = item.id;
+          document.getElementById('form-debt-type').value = item.type;
+          document.getElementById('form-debt-person').value = item.person;
+          document.getElementById('form-debt-amount').value = item.total;
+          document.getElementById('form-debt-paid').value = item.paid || '';
+          document.getElementById('form-debt-start-date').value = item.startDate;
+          document.getElementById('form-debt-due-date').value = item.dueDate;
+          document.getElementById('form-debt-notes').value = item.notes || '';
+          document.getElementById('form-debt-color').value = item.color || '#0ea5e9';
+        }
+      } else {
+        const todayStr = getTodayKey();
+        document.getElementById('form-debt-start-date').value = todayStr;
+        document.getElementById('form-debt-due-date').value = todayStr;
+        document.getElementById('form-debt-paid').value = '';
+        document.getElementById('form-debt-color').value = '#0ea5e9';
+      }
+      openModal('add-debt-modal');
+    }
+
+    function handleSaveDebt(e) {
+      e.preventDefault();
+      const editId = document.getElementById('form-debt-id').value;
+      const data = {
+        type: document.getElementById('form-debt-type').value,
+        person: document.getElementById('form-debt-person').value.trim(),
+        total: parseFloat(document.getElementById('form-debt-amount').value) || 0,
+        paid: parseFloat(document.getElementById('form-debt-paid').value) || 0,
+        startDate: document.getElementById('form-debt-start-date').value,
+        dueDate: document.getElementById('form-debt-due-date').value,
+        notes: document.getElementById('form-debt-notes').value.trim(),
+        color: document.getElementById('form-debt-color').value
+      };
+
+      if (editId) {
+        const idx = state.debts.findIndex(d => d.id === editId);
+        if (idx !== -1) state.debts[idx] = { ...state.debts[idx], ...data };
+      } else {
+        state.debts.push({ id: 'debt_' + Date.now(), ...data, history: [] });
+      }
+
+      closeModal('add-debt-modal');
+      saveAppState();
+    }
+
+    async function removeDebt(id) {
+      const confirmed = await showSystemConfirm('هل تريد بالتأكيد حذف هذا الدين وسجله؟', 'حذف معاملة ديوان', true);
+      if (confirmed) {
+        state.debts = state.debts.filter(d => d.id !== id);
+        saveAppState();
+        triggerToast('تم حذف المعاملة');
+      }
+    }
+
+    function openSettleDebtModal(id) {
+      const item = state.debts.find(d => d.id === id);
+      if (!item) return;
+
+      const rem = Math.max(0, parseFloat(item.total) - parseFloat(item.paid));
+      document.getElementById('settle-debt-id').value = item.id;
+      document.getElementById('settle-person-name').innerText = item.person;
+      document.getElementById('settle-remaining-amount').innerText = `${rem.toLocaleString('ar-EG')} ${systemConfig.currencySymbol || 'ج.م'}`;
+      document.getElementById('settle-amount').value = '';
+      document.getElementById('settle-amount').max = rem;
+      document.getElementById('settle-date').value = getTodayKey();
+      document.getElementById('settle-ref').value = '';
+      document.getElementById('settle-sync-cash').checked = false;
+
+      openModal('settle-debt-modal');
+    }
+
+    function handleConfirmSettlement(e) {
+      e.preventDefault();
+      const id = document.getElementById('settle-debt-id').value;
+      const amount = parseFloat(document.getElementById('settle-amount').value) || 0;
+      const date = document.getElementById('settle-date').value;
+      const method = document.getElementById('settle-method').value;
+      const ref = document.getElementById('settle-ref').value.trim();
+      const syncCash = document.getElementById('settle-sync-cash').checked;
+
+      const item = state.debts.find(d => d.id === id);
+      if (!item) return;
+      if (!item.history) item.history = [];
+
+      item.paid = (parseFloat(item.paid) || 0) + amount;
+      item.history.push({ amount, date, method, ref, cashSynced: syncCash });
+
+      if (syncCash) {
+        if (item.type === 'receivable') {
+          state.availableCash = (state.availableCash || 0) + amount;
+        } else {
+          state.availableCash = Math.max(0, (state.availableCash || 0) - amount);
+        }
+      }
+
+      closeModal('settle-debt-modal');
+      saveAppState();
+    }
+
+    function openDebtHistoryModal(id) {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      const item = state.debts.find(d => d.id === id);
+      if (!item) return;
+
+      document.getElementById('debt-history-title').innerText = `سجل دفعات: ${item.person}`;
+      document.getElementById('debt-history-subtitle').innerText = `الإجمالي: ${parseFloat(item.total).toLocaleString('ar-EG')} ${cur}`;
+
+      const container = document.getElementById('debt-history-container');
+      container.innerHTML = '';
+
+      if (!item.history || item.history.length === 0) {
+        container.innerHTML = `<div class="text-center py-6 text-slate-500">لا توجد دفعات</div>`;
+      } else {
+        item.history.forEach((h, idx) => {
+          const row = document.createElement('div');
+          row.className = "p-3 rounded-xl sunken-3d flex items-center justify-between";
+          row.innerHTML = `
+            <div><span class="font-bold text-white block">${parseFloat(h.amount).toLocaleString('ar-EG')} ${cur}</span><span class="text-[10px] text-slate-400">${h.date} - ${h.method}</span></div>
+            <button onclick="revertSettlement('${item.id}', ${idx})" class="text-rose-400 text-xs">تراجع</button>
+          `;
+          container.appendChild(row);
+        });
+      }
+      openModal('debt-history-modal');
+    }
+
+    async function revertSettlement(debtId, histIdx) {
+      const item = state.debts.find(d => d.id === debtId);
+      if (!item || !item.history || !item.history[histIdx]) return;
+
+      const confirmed = await showSystemConfirm('هل أنت متأكد من التراجع عن هذه الدفعة وإعادتها للحساب؟', 'تراجع عن الدفعة', true);
+      if (confirmed) {
+        const removed = item.history.splice(histIdx, 1)[0];
+        item.paid = Math.max(0, item.paid - removed.amount);
+        if (removed.cashSynced) {
+          if (item.type === 'receivable') {
+            state.availableCash = Math.max(0, (state.availableCash || 0) - removed.amount);
+          } else {
+            state.availableCash = (state.availableCash || 0) + removed.amount;
+          }
+        }
+        saveAppState();
+        openDebtHistoryModal(debtId);
+        triggerToast('تم التراجع عن الدفعة بنجاح');
+      }
+    }
+
+    function renderPlanningKPIs() {
+      let targetSum = 0;
+      let savedSum = 0;
+      let completedCount = 0;
+
+      state.plans.forEach(p => {
+        const target = parseFloat(p.targetAmount) || 0;
+        const saved = parseFloat(p.savedAmount) || 0;
+        targetSum += target;
+        savedSum += saved;
+        if (saved >= target && target > 0) completedCount++;
+      });
+
+      const remainingSum = Math.max(0, targetSum - savedSum);
+      const overallPct = targetSum > 0 ? Math.min(100, Math.round((savedSum / targetSum) * 100)) : 0;
+
+      document.getElementById('kpi-plan-target-sum').innerText = targetSum.toLocaleString('ar-EG');
+      document.getElementById('kpi-plan-saved-sum').innerText = savedSum.toLocaleString('ar-EG');
+      document.getElementById('kpi-plan-remaining-sum').innerText = remainingSum.toLocaleString('ar-EG');
+      document.getElementById('kpi-plan-count').innerText = `${state.plans.length} أهداف أو ميزانيات مخطط لها`;
+      document.getElementById('kpi-plan-completed-count').innerText = completedCount;
+      document.getElementById('kpi-plan-progress-pct').innerText = `${overallPct}%`;
+      document.getElementById('kpi-plan-progress-bar').style.width = `${overallPct}%`;
+    }
+
+    function renderPlansList() {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      const container = document.getElementById('plans-list');
+      container.innerHTML = '';
+
+      if (state.plans.length === 0) {
+        container.innerHTML = `<div class="box-3d p-8 text-center border-dashed border border-slate-800"><i data-lucide="target" class="w-10 h-10 text-slate-500 mx-auto mb-2"></i><p class="text-sm font-bold text-slate-300">لا توجد أهداف تخطيطية بعد</p><p class="text-xs text-slate-500 mt-1">اضغط على زر (هدف جديد) أعلاه لوضع خطة ادخار أو مشروع</p></div>`;
+        return;
+      }
+
+      state.plans.forEach(plan => {
+        const target = parseFloat(plan.targetAmount) || 0;
+        const saved = parseFloat(plan.savedAmount) || 0;
+        const remaining = Math.max(0, target - saved);
+        const pct = target > 0 ? Math.min(100, Math.round((saved / target) * 100)) : 0;
+        const isDone = remaining === 0;
+
+        const card = document.createElement('div');
+        card.className = "box-3d p-4 sm:p-5 relative border-r-4 flex flex-col justify-between";
+        card.style.borderRightColor = plan.color || '#a855f7';
+
+        card.innerHTML = `
+          <div>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+              <div class="flex items-center gap-2 flex-wrap">
+                <h3 class="text-base font-extrabold text-white">${plan.title}</h3>
+                <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">${plan.category || 'تخطيط'}</span>
+                ${isDone ? '<span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">مكتمل</span>' : ''}
+              </div>
+
+              <div class="flex items-center gap-1.5 self-end sm:self-auto flex-wrap">
+                ${!isDone ? `<button onclick="openPlanDepositModal('${plan.id}')" class="px-3 py-1.5 rounded-xl text-xs font-bold bg-purple-600 hover:bg-purple-700 text-white btn-3d">إيداع مبلغ</button>` : ''}
+                <button onclick="openAddPlanModal('${plan.id}')" class="p-2 rounded-xl sunken-3d text-slate-300 btn-3d"><i data-lucide="pencil" class="w-4 h-4"></i></button>
+                <button onclick="removePlan('${plan.id}')" class="p-2 rounded-xl sunken-3d text-slate-400 hover:text-rose-400 btn-3d"><i data-lucide="trash-2" class="w-4 h-4"></i></button>
+              </div>
+            </div>
+
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 py-3 border-y border-slate-800 text-xs">
+              <div><span class="text-slate-400 block text-[10px]">المبلغ المستهدف:</span><span class="font-extrabold text-white text-sm">${target.toLocaleString('ar-EG')} ${cur}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">المحفوظ حتى الآن:</span><span class="font-bold text-emerald-400 text-sm">${saved.toLocaleString('ar-EG')} ${cur}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">المتبقي للهدف:</span><span class="font-bold text-amber-300 text-sm">${remaining.toLocaleString('ar-EG')} ${cur}</span></div>
+              <div><span class="text-slate-400 block text-[10px]">الموعد المستهدف:</span><span class="font-bold text-purple-300 text-xs">${plan.targetDate}</span></div>
+            </div>
+
+            ${plan.notes ? `<p class="text-[11px] text-slate-400 mt-2 italic">ملاحظة: ${plan.notes}</p>` : ''}
+
+            <div class="mt-3 flex items-center justify-between gap-2 text-[11px]"><span class="text-slate-400">نسبة الإنجاز (المتبقي: ${remaining.toLocaleString('ar-EG')} ${cur})</span><span class="font-bold text-purple-400">${pct}%</span></div>
+          </div>
+          <div class="w-full sunken-3d rounded-full h-2 mt-3 overflow-hidden"><div class="h-full rounded-full transition-all duration-300 bg-gradient-to-r from-purple-500 to-emerald-400" style="width: ${pct}%"></div></div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    function renderPlanningCalendar() {
+      const year = calDatePlanning.getFullYear();
+      const month = calDatePlanning.getMonth();
+      const arabicMonths = ["يناير", "فبراير", "مارس", "أبريل", "مايو", "يونيو", "يوليو", "أغسطس", "سبتمبر", "أكتوبر", "نوفمبر", "ديسمبر"];
+      document.getElementById('cal-month-name-planning').innerText = `${arabicMonths[month]} ${year}`;
+
+      const cells = document.getElementById('calendar-cells-planning');
+      cells.innerHTML = '';
+
+      const firstDay = new Date(year, month, 1);
+      const totalDays = new Date(year, month + 1, 0).getDate();
+      const startDay = firstDay.getDay();
+      const emptyLead = (startDay + 1) % 7;
+
+      for (let i = 0; i < emptyLead; i++) {
+        const empty = document.createElement('div');
+        empty.className = "h-16 sm:h-20 rounded-xl bg-slate-900/30 border border-slate-800/30";
+        cells.appendChild(empty);
+      }
+
+      const planMap = {};
+      state.plans.forEach(p => {
+        if (!planMap[p.targetDate]) planMap[p.targetDate] = [];
+        planMap[p.targetDate].push(p);
+      });
+
+      const todayStr = getTodayKey();
+
+      for (let day = 1; day <= totalDays; day++) {
+        const dateKey = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
+        const isToday = (todayStr === dateKey);
+        const dayPlans = planMap[dateKey] || [];
+        const hasNote = !!(state.planningNotes && state.planningNotes[dateKey]);
+
+        const dayCell = document.createElement('div');
+        dayCell.className = `cal-cell h-16 sm:h-20 rounded-xl p-1 flex flex-col justify-between cursor-pointer transition relative overflow-hidden ${isToday ? 'today-cell-planning' : ''}`;
+        dayCell.onclick = () => openDayCardPlanning(dateKey, day, dayPlans);
+
+        dayCell.innerHTML = `
+          <div class="flex items-center justify-between"><span class="text-[10px] sm:text-xs font-black ${isToday ? 'text-white px-1.5 py-0.5 rounded-lg bg-purple-600' : 'text-slate-300'}">${day}</span>${hasNote ? '<span class="w-1.5 h-1.5 rounded-full bg-purple-400"></span>' : ''}</div>
+          <div class="space-y-0.5 overflow-hidden my-0.5">
+            ${dayPlans.map(p => `<div class="text-[8px] px-1 py-0.5 rounded truncate text-white font-bold" style="background-color: ${p.color || '#a855f7'}">هدف: ${p.title}</div>`).join('')}
+          </div>
+        `;
+        cells.appendChild(dayCell);
+      }
+    }
+
+    function stepMonthPlanning(delta) { calDatePlanning.setMonth(calDatePlanning.getMonth() + delta); renderPlanningCalendar(); }
+    function jumpToTodayPlanning() { calDatePlanning = new Date(); renderPlanningCalendar(); }
+
+    function openDayCardPlanning(dateKey, dayNum, dayPlans) {
+      const cur = systemConfig.currencySymbol || 'ج.م';
+      currentSelectedDateKeyPlanning = dateKey;
+      const card = document.getElementById('day-notes-card-planning');
+      card.classList.remove('hidden');
+      document.getElementById('selected-day-title-planning').innerText = `تفاصيل يوم ${dayNum} (${dateKey})`;
+
+      const list = document.getElementById('selected-day-items-planning');
+      list.innerHTML = '';
+
+      if (!dayPlans || dayPlans.length === 0) {
+        list.innerHTML = `<div class="text-xs text-slate-400 p-2 rounded-xl sunken-3d">لا توجد أهداف محددة لهذا اليوم</div>`;
+      } else {
+        dayPlans.forEach(p => {
+          const rem = Math.max(0, parseFloat(p.targetAmount) - parseFloat(p.savedAmount));
+          list.innerHTML += `<div class="flex items-center justify-between p-2 rounded-xl bg-purple-950/40 border border-purple-800/40 text-xs"><span class="font-bold text-white">${p.title} (${p.category})</span><span class="font-black text-purple-300">المتبقي: ${rem.toLocaleString('ar-EG')} ${cur}</span></div>`;
+        });
+      }
+
+      document.getElementById('day-note-text-planning').value = (state.planningNotes && state.planningNotes[dateKey]) || '';
+    }
+
+    function closeDayCardPlanning() { document.getElementById('day-notes-card-planning').classList.add('hidden'); }
+    function saveDayNotePlanning() {
+      if (!currentSelectedDateKeyPlanning) return;
+      const val = document.getElementById('day-note-text-planning').value.trim();
+      if (!state.planningNotes) state.planningNotes = {};
+      if (val) state.planningNotes[currentSelectedDateKeyPlanning] = val;
+      else delete state.planningNotes[currentSelectedDateKeyPlanning];
+      saveAppState();
+      triggerToast('تم الحفظ بنجاح');
+    }
+
+    function openAddPlanModal(editId = null) {
+      const form = document.getElementById('plan-form');
+      form.reset();
+      document.getElementById('form-plan-id').value = '';
+
+      if (editId) {
+        const item = state.plans.find(p => p.id === editId);
+        if (item) {
+          document.getElementById('form-plan-id').value = item.id;
+          document.getElementById('form-plan-title').value = item.title;
+          document.getElementById('form-plan-target').value = item.targetAmount;
+          document.getElementById('form-plan-saved').value = item.savedAmount || '';
+          document.getElementById('form-plan-category').value = item.category;
+          document.getElementById('form-plan-target-date').value = item.targetDate;
+          document.getElementById('form-plan-notes').value = item.notes || '';
+          document.getElementById('form-plan-color').value = item.color || '#a855f7';
+        }
+      } else {
+        document.getElementById('form-plan-target-date').value = getTodayKey();
+        document.getElementById('form-plan-saved').value = '';
+        document.getElementById('form-plan-color').value = '#a855f7';
+      }
+      openModal('add-plan-modal');
+    }
+
+    function handleSavePlan(e) {
+      e.preventDefault();
+      const editId = document.getElementById('form-plan-id').value;
+      const data = {
+        title: document.getElementById('form-plan-title').value.trim(),
+        targetAmount: parseFloat(document.getElementById('form-plan-target').value) || 0,
+        savedAmount: parseFloat(document.getElementById('form-plan-saved').value) || 0,
+        category: document.getElementById('form-plan-category').value,
+        targetDate: document.getElementById('form-plan-target-date').value,
+        notes: document.getElementById('form-plan-notes').value.trim(),
+        color: document.getElementById('form-plan-color').value
+      };
+
+      if (editId) {
+        const idx = state.plans.findIndex(p => p.id === editId);
+        if (idx !== -1) state.plans[idx] = { ...state.plans[idx], ...data };
+      } else {
+        state.plans.push({ id: 'plan_' + Date.now(), ...data, deposits: [] });
+      }
+
+      closeModal('add-plan-modal');
+      saveAppState();
+    }
+
+    async function removePlan(id) {
+      const confirmed = await showSystemConfirm('هل أنت متأكد من حذف هذا الهدف التخطيطي؟', 'حذف هدف تخطيطي', true);
+      if (confirmed) {
+        state.plans = state.plans.filter(p => p.id !== id);
+        saveAppState();
+        triggerToast('تم حذف الهدف');
+      }
+    }
+
+    function openPlanDepositModal(id) {
+      const plan = state.plans.find(p => p.id === id);
+      if (!plan) return;
+
+      const rem = Math.max(0, parseFloat(plan.targetAmount) - parseFloat(plan.savedAmount));
+      document.getElementById('deposit-plan-id').value = plan.id;
+      document.getElementById('deposit-plan-title').innerText = plan.title;
+      document.getElementById('deposit-plan-remaining').innerText = `${rem.toLocaleString('ar-EG')} ${systemConfig.currencySymbol || 'ج.م'}`;
+      document.getElementById('deposit-amount').value = '';
+      document.getElementById('deposit-amount').max = rem;
+      document.getElementById('deposit-deduct-cash').checked = false;
+
+      openModal('plan-deposit-modal');
+    }
+
+    function handleConfirmPlanDeposit(e) {
+      e.preventDefault();
+      const id = document.getElementById('deposit-plan-id').value;
+      const amount = parseFloat(document.getElementById('deposit-amount').value) || 0;
+      const deduct = document.getElementById('deposit-deduct-cash').checked;
+
+      const plan = state.plans.find(p => p.id === id);
+      if (!plan) return;
+
+      plan.savedAmount = (parseFloat(plan.savedAmount) || 0) + amount;
+      if (!plan.deposits) plan.deposits = [];
+      plan.deposits.push({ amount, date: getTodayKey(), deductCash: deduct });
+
+      if (deduct) {
+        state.availableCash = Math.max(0, (state.availableCash || 0) - amount);
+      }
+
+      closeModal('plan-deposit-modal');
+      saveAppState();
+      triggerToast('تم تسجيل الإيداع بنجاح');
+    }
+
+    function checkDueWarnings() {
+      const banner = document.getElementById('due-warning-banner');
+      const notifDot = document.getElementById('notif-dot');
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      activeUrgentNotifications = [];
+
+      state.roscas.forEach(rosca => {
+        const schedule = calculateRoscaSchedule(rosca);
+        schedule.forEach(item => {
+          if (!item.isPaid) {
+            const diffDays = Math.ceil((item.date - today) / (1000 * 60 * 60 * 24));
+            if (diffDays >= 0 && diffDays <= 4) {
+              activeUrgentNotifications.push({ name: rosca.name, dateKey: item.dateKey });
+            }
+          }
+        });
+      });
+
+      if (activeUrgentNotifications.length > 0) {
+        notifDot.classList.remove('hidden');
+        banner.classList.remove('hidden');
+      } else {
+        notifDot.classList.add('hidden');
+        banner.classList.add('hidden');
+      }
+    }
+
+    function handleNotificationClick() {
+      if (activeUrgentNotifications.length === 0) {
+        triggerToast("لا توجد استحقاقات قريبة");
+      } else {
+        triggerToast(`لديك ${activeUrgentNotifications.length} استحقاقات قادمة قريباً`);
+      }
+    }
+
+    function exportUnifiedExcelSheet() {
+      let csv = '\uFEFF';
+      csv += `"UNIFIED_SYSTEM_PAYLOAD","${btoa(encodeURIComponent(JSON.stringify(state)))}"\n`;
+      const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = `backup_${getTodayKey()}.csv`;
+      a.click();
+      URL.revokeObjectURL(url);
+    }
+
+    function importUnifiedExcelSheet(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const content = e.target.result;
+        try {
+          if (content.includes('UNIFIED_SYSTEM_PAYLOAD')) {
+            const lines = content.split('\n');
+            let payload = null;
+            for (let l of lines) {
+              if (l.includes('UNIFIED_SYSTEM_PAYLOAD')) {
+                payload = l.split(',')[1].replace(/"/g, '').trim();
+                break;
+              }
+            }
+            if (payload) {
+              state = JSON.parse(decodeURIComponent(atob(payload)));
+              saveAppState();
+              closeModal('backup-modal');
+              triggerToast('تمت الاستعادة بنجاح');
+            }
+          }
+        } catch (err) {
+          showSystemAlert('الملف المرفوع غير متوافق أو تالف، تعذر استيراد البيانات.', 'danger', 'خطأ في الاستيراد');
+        }
+      };
+      reader.readAsText(file);
+    }
+
+    function renderUnifiedUI() {
+      if (currentTab === 'jamiyati') {
+        renderJamiyatiKPIs();
+        renderCalendarMatrix();
+        renderRoscasList();
+      } else if (currentTab === 'dewan') {
+        renderDewanKPIs();
+        renderDewanCalendar();
+        renderDebtsList();
+      } else if (currentTab === 'planning') {
+        renderPlanningKPIs();
+        renderPlanningCalendar();
+        renderPlansList();
+      }
+      checkDueWarnings();
+      if (window.lucide) lucide.createIcons();
+    }
+
+    window.addEventListener('DOMContentLoaded', async () => {
+      await loadUsersAndConfig();
+      checkActiveSession();
+    });
+  </script>
+</body>
+</html>
