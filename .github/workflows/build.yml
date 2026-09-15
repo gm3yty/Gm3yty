@@ -13,8 +13,18 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Check Workspace Files (Debug)
-        run: ls -la
+      - name: Find and Set Working Directory
+        id: find-dir
+        run: |
+          # البحث التلقائي عن مسار ملف package.json وتخزينه
+          PKG_PATH=$(find . -name "package.json" -maxdepth 3 | head -n 1)
+          if [ -z "$PKG_PATH" ]; then
+            echo "Error: package.json not found anywhere!"
+            exit 1
+          fi
+          DIR_PATH=$(dirname "$PKG_PATH")
+          echo "Found project at: $DIR_PATH"
+          echo "dir=$DIR_PATH" >> $GITHUB_OUTPUT
 
       - name: Set up Node.js
         uses: actions/setup-node@v4
@@ -22,9 +32,11 @@ jobs:
           node-version: '18'
 
       - name: Install Dependencies
+        working-directory: ${{ steps.find-dir.outputs.dir }}
         run: npm install
 
       - name: Build Web App & Capacitor Sync
+        working-directory: ${{ steps.find-dir.outputs.dir }}
         run: |
           npm run build
           npx cap sync android
@@ -40,19 +52,15 @@ jobs:
         with:
           packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
 
-      - name: Grant execute permission for gradlew
-        run: |
-          cd android
-          chmod +x gradlew
-
       - name: Build Release APK with Gradle
+        working-directory: ${{ steps.find-dir.outputs.dir }}/android
         run: |
-          cd android
+          chmod +x gradlew
           ./gradlew assembleRelease
 
       - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
-          path: android/app/build/outputs/apk/release/app-release.apk
+          path: ${{ steps.find-dir.outputs.dir }}/android/app/build/outputs/apk/release/app-release.apk
           
