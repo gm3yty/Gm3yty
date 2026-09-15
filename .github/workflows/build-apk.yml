@@ -31,23 +31,44 @@ jobs:
           cp -r * www/ 2>/dev/null || true
           rm -rf www/www www/node_modules www/.github www/android
 
-      - name: Install Dependencies & Assets Tool
+      - name: Install Dependencies
         run: |
           npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/assets
-
-      - name: Download Wallet Icon
-        run: |
-          curl -s -L -o icon.png "https://cdn-icons-png.flaticon.com/512/5501/5501375.png"
+          npm install @capacitor/core @capacitor/cli @capacitor/android
 
       - name: Add Android Platform
         run: |
           npx cap add android
-
-      - name: Generate App Icons
-        run: |
-          npx @capacitor/assets generate --android --iconBackgroundColor '#060910'
           npx cap sync android
+
+      - name: Download & Replace Wallet Icons
+        run: |
+          # تنزيل أيقونة حقيبة النقود 3D (الخيار 4)
+          curl -s -L -o wallet_icon.png "https://cdn-icons-png.flaticon.com/512/9440/9440537.png"
+
+          # مسار مجلد الموارد في أندرويد
+          RES_DIR="android/app/src/main/res"
+
+          # استبدال جميع مقاسات الأيقونات مباشرة لضمان ظهورها
+          convert wallet_icon.png -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher.png
+          convert wallet_icon.png -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher_round.png
+          convert wallet_icon.png -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher_foreground.png
+
+          convert wallet_icon.png -resize 72x72 $RES_DIR/mipmap-hdpi/ic_launcher.png
+          convert wallet_icon.png -resize 72x72 $RES_DIR/mipmap-hdpi/ic_launcher_round.png
+          convert wallet_icon.png -resize 72x72 $RES_DIR/mipmap-hdpi/ic_launcher_foreground.png
+
+          convert wallet_icon.png -resize 96x96 $RES_DIR/mipmap-xhdpi/ic_launcher.png
+          convert wallet_icon.png -resize 96x96 $RES_DIR/mipmap-xhdpi/ic_launcher_round.png
+          convert wallet_icon.png -resize 96x96 $RES_DIR/mipmap-xhdpi/ic_launcher_foreground.png
+
+          convert wallet_icon.png -resize 144x144 $RES_DIR/mipmap-xxhdpi/ic_launcher.png
+          convert wallet_icon.png -resize 144x144 $RES_DIR/mipmap-xxhdpi/ic_launcher_round.png
+          convert wallet_icon.png -resize 144x144 $RES_DIR/mipmap-xxhdpi/ic_launcher_foreground.png
+
+          convert wallet_icon.png -resize 192x192 $RES_DIR/mipmap-xxxhdpi/ic_launcher.png
+          convert wallet_icon.png -resize 192x192 $RES_DIR/mipmap-xxxhdpi/ic_launcher_round.png
+          convert wallet_icon.png -resize 192x192 $RES_DIR/mipmap-xxxhdpi/ic_launcher_foreground.png
 
       - name: Build Debug APK
         run: |
