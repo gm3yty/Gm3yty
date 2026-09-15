@@ -17,12 +17,11 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: '18'
-          cache: 'npm'
 
       - name: Install Dependencies
         run: npm install
 
-      - name: Build Web App / Capacitor Sync
+      - name: Build Web App & Capacitor Sync
         run: |
           npm run build
           npx cap sync android
@@ -38,13 +37,17 @@ jobs:
         with:
           packages: 'platform-tools platforms;android-34 build-tools;34.0.0'
 
-      - name: Build APK with Gradle
+      - name: Grant execute permission for gradlew
         run: |
           cd android
           chmod +x gradlew
+
+      - name: Build Release APK with Gradle
+        run: |
+          cd android
           ./gradlew assembleRelease
 
-      - name: Upload Android APK
+      - name: Upload Android APK Artifact
         uses: actions/upload-artifact@v4
         with:
           name: app-release-apk
