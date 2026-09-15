@@ -1,7 +1,6 @@
 {
-  "appId": "com.jamiyati.financialmanager",
-  "appName": "جمعيتي& دايون & التخطيط",
+  "appId": "com.mahfazti.app",
+  "appName": "محفظتي",
   "webDir": "www",
   "bundledWebRuntime": false
 }
-
