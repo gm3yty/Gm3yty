@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 22
 
       - name: Setup Java JDK
         uses: actions/setup-java@v4
@@ -31,10 +31,10 @@ jobs:
           cp -r * www/ 2>/dev/null || true
           rm -rf www/www www/node_modules www/.github www/android
 
-      - name: Install Latest Capacitor
+      - name: Install Dependencies
         run: |
           npm init -y
-          npm install @capacitor/core@latest @capacitor/cli@latest @capacitor/android@latest
+          npm install @capacitor/core @capacitor/cli @capacitor/android
 
       - name: Add Android Platform & Sync
         run: |
