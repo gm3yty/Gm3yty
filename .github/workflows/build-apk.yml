@@ -31,14 +31,22 @@ jobs:
           cp -r * www/ 2>/dev/null || true
           rm -rf www/www www/node_modules www/.github www/android
 
-      - name: Install Dependencies
+      - name: Install Dependencies & Assets Tool
         run: |
           npm init -y
-          npm install @capacitor/core @capacitor/cli @capacitor/android
+          npm install @capacitor/core @capacitor/cli @capacitor/android @capacitor/assets
 
-      - name: Add Android Platform & Sync
+      - name: Download Wallet Icon
+        run: |
+          curl -s -L -o icon.png "https://cdn-icons-png.flaticon.com/512/5501/5501375.png"
+
+      - name: Add Android Platform
         run: |
           npx cap add android
+
+      - name: Generate App Icons
+        run: |
+          npx @capacitor/assets generate --android --iconBackgroundColor '#060910'
           npx cap sync android
 
       - name: Build Debug APK
@@ -50,6 +58,6 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: financial-manager-apk
+          name: mahfazti-app-apk
           path: android/app/build/outputs/apk/debug/app-debug.apk
           
