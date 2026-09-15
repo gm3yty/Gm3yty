@@ -24,6 +24,11 @@ jobs:
           distribution: 'temurin'
           java-version: '21'
 
+      - name: Install ImageMagick
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y imagemagick
+
       - name: Prepare Web Assets
         run: |
           mkdir -p www
@@ -43,13 +48,10 @@ jobs:
 
       - name: Download & Replace Wallet Icons
         run: |
-          # تنزيل أيقونة حقيبة النقود 3D (الخيار 4)
           curl -s -L -o wallet_icon.png "https://cdn-icons-png.flaticon.com/512/9440/9440537.png"
 
-          # مسار مجلد الموارد في أندرويد
           RES_DIR="android/app/src/main/res"
 
-          # استبدال جميع مقاسات الأيقونات مباشرة لضمان ظهورها
           convert wallet_icon.png -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher.png
           convert wallet_icon.png -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher_round.png
           convert wallet_icon.png -resize 48x48 $RES_DIR/mipmap-mdpi/ic_launcher_foreground.png
